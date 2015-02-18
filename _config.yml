@@ -1,0 +1,35 @@
+#jekyll serve
+
+# Site wide configuration
+
+title: 臭豆腐 
+description: "$implicity is everything, since valentine's day 2004."
+logo: logo/120x120-moilion.png
+teaser: logo/400x250-skill.png
+url: http://local.trydofor.com:4000
+
+# Jekyll configuration
+
+sass:
+    sass_dir: _sass
+    style: compressed
+permalink: /:categories/:title.html
+markdown: redcarpet
+#markdown: kramdown
+highlighter: pygments
+
+gems:
+  - jekyll-sitemap
+
+redcarpet:
+  extensions: ["fenced_code_blocks","tables","autolink","strikethrough","no_intra_emphasis"]
+
+# Site owner
+owner:
+  name: "史荣久"
+  web: http://www.trydofor.com
+  bio: "$implicity is everything, since valentine's day 2004."
+  avatar: user/shi.rongjiu.jpg
+
+
+exclude: ["lib", "config.rb", ".sass-cache", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "*.sublime-project", "*.sublime-workspace", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "node_modules", "Gruntfile.js", "package.json"]
