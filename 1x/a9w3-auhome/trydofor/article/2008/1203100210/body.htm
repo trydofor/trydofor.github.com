@@ -1,0 +1,93 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Class的类型和类型的Class
+^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2005-04-09
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. Class的名字
+^^^^^^^^^^^^^^
+...............................................................................
+public String getName()
+
+Returns the name of the entity (class, interface, array class, 
+primitive type, or void) represented by this Class object, as a String. 
+If this class object represents a reference type that is not an array 
+type then the binary name of the class is returned, as specified by the 
+Java Language Specification, Second Edition. 
+
+If this class object represents a primitive type or void, then the name 
+returned is a String equal to the Java language keyword corresponding 
+to the primitive type or void. 
+
+If this class object represents a class of arrays, then the internal 
+form of the name consists of the name of the element type preceded by 
+one or more '[' characters representing the depth of the array nesting. 
+The encoding of element type names is as follows: 
+
+Element Type                Encoding  
+boolean                     Z  
+byte                        B  
+char                        C  
+class or interface          Lclassname;  
+double                      D  
+float                       F  
+int                         I  
+long                        J  
+short                       S  
+
+The class or interface name classname is the binary name of the class 
+specified above. 
+
+Examples: 
+
+ String.class.getName()
+     returns "java.lang.String"
+ byte.class.getName()
+     returns "byte"
+ (new Object[3]).getClass().getName()
+     returns "[Ljava.lang.Object;"
+ (new int[3][4][5][6][7][8][9]).getClass().getName()
+     returns "[[[[[[[I"
+................................................................................
+简单来讲：
+    1)  [   表示数组，有几个就是几维。
+    2)  L;  与[结合，表示类的数组，类型就是L和;中间所夹的类型。
+    3)  对于非数组类型的，直接返回它的名字。
+
+2. 对像的Class
+^^^^^^^^^^^^^^
+..................................................
+
+__.class 或 __.TYPE
+
+boolean    -&gt;     boolean.class   =    Boolean.TYPE
+byte       -&gt;     byte.class      =    Byte.TYPE
+char       -&gt;     char.class      =    Character.TYPE
+int        -&gt;     int.class       =    Integer.TYPE
+short      -&gt;     short.class     =    Short.TYPE
+long       -&gt;     long.class      =    Long.TYPE
+float      -&gt;     float.class     =    Float.TYPE
+double     -&gt;     double.class    =    Double.TYPE
+void       -&gt;     void.class      =    Void.TYPE
+
+int[]      -&gt;     int[].class
+short[][]  -&gt;     short[][].class
+String[]   -&gt;     String[].class
+
+(可能还有其他的表示方法，但目前我还不会)
+..................................................
+
+3. 参考文献：
+^^^^^^^^^^^^
+    * J2SDK API java.lang.Class.getName()
+    * [[net.sf.cglib.core.TypeUtils.java=&gt;http://cglib.sourceforge.net/]]
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

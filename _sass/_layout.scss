@@ -24,9 +24,8 @@
 	color: $black;
 	font-family: $alt-font;
 	font-weight: 700;
-	@include font-size(20,no);
+	@include font-size(19,no);
 	line-height: .5 * $masthead-height; // half the height to center vertically
-	text-transform: uppercase;
 }
 
 
@@ -467,5 +466,13 @@
 			color: lighten($black,60);
 			text-decoration: none;
 		}
+	}
+}
+
+// 
+.archive-list {
+	li {
+		list-style-type:decimal-leading-zero;
+		color: #a36209;
 	}
 }

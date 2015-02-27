@@ -1,0 +1,97 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+IVY+IVYDE 非经典实践
+^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2010-06-07
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 在我和你间填个字
+^^^^^^^^^^^^^^^^^^^
+肉麻的开始，很自然会填V，于是就有了IVY了。
+话说这一日，豆腐心血来潮，要写一个程序，要求是这样的：
+ * 在两个数据库之间倒动数据。
+ * 可以定制，灵活的，易懂的。
+ * 表间有依赖，有自增型主键。
+ * 简单简洁，全JDBC，全SQL。
+
+不想让日本人知道，进而不想让印度人知道，于是建了个模块。
+credit_tea，希望这个模块内的东东可以象茶一样清爽。
+
+自然想到了Maven2，但这家伙始终让我望而止步，没大规模使用过。
+又自然的想起了IVY，因为大家对ANT熟，Spring也用它们。
+
+2. 爱是这么炼成地
+^^^^^^^^^^^^^^^^^
+http://ant.apache.org/ivy/
+最新ivy-2.1.0.jar，放到 ant1.7.0/lib下 （注意Spring编译时不这么放）。
+http://ant.apache.org/ivy/ivyde/index.html
+最新ivyde-2.0.0 安装到非eclipse目录，如，D:/software/eclipse_plugins/
+
+先说这个ivyde，在设置properties和setting时，很缺心眼。
+ * enable project specific settings时，必须 setting和properties全指定。
+ * 俺不想动Ivy的默认设置，只想和ant一样修改个properties而已，但不行。
+
+在这种情况下，为了使eclipse正常开发，采用了曲道救国的策略。
+ * 把public中用的lib，放到shared中。
+ * 把内部生产的lib，放到local中。
+ * ant和ivyde都是用默认 cache，但由ant初始化。
+
+于是eclipse package视图结构如下：
+================= txt:eclipse package =================
+Credit_Tea、
+|-- cn.edgesoft.credit.database.datasync
+|--|-- src/  # 主源代码
+|--|-- test/ # Junit源代码
+|--|-- JRE System Library [j2re1.4.2_13]
+|--|-- build/ivy.xml[*]
+|--|-- build/
+|--|--|-- build.properties
+|--|--|-- build.xml
+|--|--|-- ivy.xml
+|--|--|-- ivysettings.properties
+... ... ...
+|-- cn.edgesoft.credit.librepo
+|--|-- ivyrepo/ # ivy 仓库
+|--|--|-- local/
+|--|--|-- shared/
+|--|-- scripts/ # 构建仓库的脚本
+|--|--|-- ant-default-setting.properties
+|--|--|-- ant-ivr-publish-jars.properties
+|--|--|-- ant-ivr-publish-jars.xml
+|--|--|-- ivy.xml
+|--|--|-- ivysettings.properties
+=======================================================
+
+3. 我爱你，就像蚂蚁爱日食
+^^^^^^^^^^^^^^^^^^^^^^^^^
+脚本打包备查，十分简陋，能运行，仅供参考。
+[[datasync的build文件 =&gt;./data/datasync-build.zip]]
+[[librepo的scripts文件 =&gt;./data/librepo-scripts.zip]]
+
+话说，俺十分希望 ivyde能像ant一样的确定 properties 和工作。
+在 ant 制作release文件的时候，发送了一些插曲。
+
+首先，是 ivy管理的依赖 如何进 release/lib/。步骤如下：
+ 1) ivy:cachefileset
+ 2) copy todir="${dir.release.lib}" flatten="true"
+
+然后，是如何进MANIFEST.MF文件。步骤如下：
+ 1) pathconvert 转换相对路径和 dirsep "/"
+ 2) 了解 MANIFEST.MF 定义中的换行规则。
+
+最后，是IVY的conf规则，这个是没认真看手册，卡在了dom4j的依赖上。
+dom4j的ivy.xml中conf有10个。默认全引入过来，一堆jar。
+在细读手册之后，增加了conf="*->master"。
+
+这么折腾的好处是，lib管理都给IVY了，工程清楚。发布的时候ant给收集过来。
+略带点遗憾，就是这次依旧用了jdk1.4，没有泛型，集合类操作起来很晕乎。
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -1,0 +1,109 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Linux下的R命令的配置
+^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2005-06-21
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 问题描述
+^^^^^^^^^^^
+R-Command是rsh,rcp和rlogin.
+在现在的linux发行版中以退出历史舞台,被ssh,scp所取代.
+基本应用,是对早期系统的维护或特殊要求.
+
+2. 测试环境
+^^^^^^^^^^
+机器A(192.168.1.3)和机器B(192.168.1.4)配置相同:
+RedHat 9.0  kenerl:2.4.20-8
+
+3. 安装服务
+^^^^^^^^^^
+============ tty : root@192.168.1.4 ==============
+#RedHat是不默认安装R服务了,rpm在RedHat的CD3的以下位置
+#RedHat/RPMS/rsh-server-0.17-14.i386.rpm
+rpm -ivh rsh-server*.rpm;
+
+ntsysv
+#setup 命令也可
+# 选中列表中的以下服务
+# [*] rexec
+# [*] rlogin
+# [*] rsh
+
+#重启动xinetd服务器
+service xinetd restart
+==================================================
+
+4. 配置服务
+^^^^^^^^^^
+服务的配置比较简单,主要涉及到一下几个文件
+/etc/hosts.equiv (默认不存在)
+$HOME/.rhost (默认不存在)
+前者是基于主机信任，后者是基于主机加用户信任
+
+这里只做后者，所以没有/etc/hosts.equiv
+============ tty : root@192.168.1.4 ==============
+cat ~/.rhosts
+&gt;trydofor_com  tdf
+&gt;192.168.1.3   tdf
+
+#增加登陆方式
+echo rsh &gt;&gt;/etc/securetty
+echo rlogin &gt;&gt;/etc/securetty
+==================================================
+
+5. 验证过程
+^^^^^^^^^^
+..................................................
+ -              find remote user                
+ |            +------------------+ No           
+      rlogind |                  +-----&gt; Deny   
+ 1   --------&gt;|    /etc/passwd   | YES          
+              |                  +----+         
+ |            +------------------+    |         
+ -  +---------------------------------+         
+ |  |           find remote host                
+    |         +------------------+ Yes          
+ 2  |         |                  +-----&gt; Allow  
+    | rlogind | /etc/hosts.equiv | No           
+ |  +--------&gt;|                  +----+         
+ -            +------------------+    |         
+ |  +---------------------------------+         
+    |        find remote host &amp; user            
+ 3  |         +------------------+ Yes          
+    |         |                  +-----&gt; Allow  
+ |  | rlogind |   $HOME/.rhosts  | No           
+ -  +--------&gt;|                  +-----&gt; Prompt 
+              +------------------+              
+..................................................
+1) rlogind在/etc/passwd中寻找远程用户名：
+    没有则拒绝,反之，进行2
+2) rlogind在/etc/hosts.equiv寻找远程主机名：
+    有则允许访问,反之，进行3
+3) rlogind在$HOME/.rhosts寻找远程主机名和用户名：
+    有且该项后无用户名则允许访问。
+    有且该项后有用户名，且远程用户名位于其中，则允许访问。
+    反之，则提示远程用户给出口令可以登录本机。（无法使用rcp、rsh）
+
+[NOTE]::这里的$HOME是与远程用户同名的本机用户的主目录。
+
+6. 注意事项
+^^^^^^^^^^
+* $HOME/.rhosts 必须是644权限的,否则,rsh时会提示Permission deny
+* /etc/hosts.equiv中的+ 意味着任意主机，与/etc/hosts无关。
+   $HOME/.rhosts 的+ +意味着任何机器任何用户，与/etc/passwd无关。
+   这些都是极度危险的。
+* rlogin -l username hostname
+   /etc/passwd的验证和$HOME的确定是以-l参数为准。
+   但，$HOME/.rhosts中的用户名不是以-l参数为准，而是远程主机的当前用户，
+   并且不要求其出现在/etc/passwd文件中。
+* 如果出现"Host address mismatch" 错误提示,说明/etc/hosts里有重复主机名.
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -4,15 +4,15 @@ layout: default
 
 <div id="main" role="main">	
 	<article class="wrap" itemscope itemtype="http://schema.org/Article">
-		{% if page.image.feature %}
+		{% if page.feature %}
 		<div class="page-feature">
 			<div class="page-image">
-				<img src="{{ site.url }}/images/{{ page.image.feature }}" class="page-feature-image" alt="{{ page.title }}" itemprop="image">
+				<img src="{{ site.url }}/images/{{ page.feature }}" class="page-feature-image" alt="{{ page.title }}" itemprop="image">
 				{% if page.image.credit %}{% include image-credit.html %}{% endif %}
 			</div><!-- /.page-image -->
 		</div><!-- /.page-feature -->
 		{% endif %}
-		{% include breadcrumbs.html %}
+		{% if page.categories %}{% include breadcrumbs.html %}{% endif %}
 		<div class="page-title">
 			<h1>{{ page.title }}</h1>
 		</div>
@@ -22,11 +22,11 @@ layout: default
 				{{ content }}
 				<hr />
 				<footer class="page-footer">
-					{% if page.share != false %}{% include share-this.html %}{% endif %}
 					{% include page-meta.html %}
 				</footer><!-- /.footer -->
 				<aside>
-					{% if page.comments == true %}{% include comments.html %}{% endif %}
+                    {% if page.share == true %}{% include share-this-baidu.html %}{% endif %}
+                    {% if page.comments == true %}{% include comments-duoshuo.html %}{% endif %}
 				</aside>
 			</div><!-- /.content -->
 		</div><!-- /.inner-wrap -->

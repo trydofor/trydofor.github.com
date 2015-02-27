@@ -1,0 +1,282 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+自由之路之全民开源
+^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-03-10
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 开源之'3W'
+^^^^^^^^^^^^^
+1.1. 什么是开源(What)
+^^^^^^^^^^^^^^^^^^^^^
+开源是开发源代码(open source)的意思，一般指开源软件(open source software)，
+但并不仅限于软件。开源软件也是一种自由软件(free software)。
+
+自由软件强调的是用户使用软件的自由，而不是价格(更不是免费的意思)。
+通常，如果一个软件赋予用户如下4个自由度，那么这个软件就是自由软件：
+
+1. 出于任何目的，运行软件的自由。
+2. 学习软件如何工作，以及为了满足自己的需要修改软件的自由。
+3. 为了帮助你的邻居，将软件拷贝给他的自由。
+4. 为了能够让整个社团受益，公开发行改进之后的软件的自由。
+
+显然，2.与 4.的前提是能够访问软件的源代码，因此自由软件基本上是开源的。
+
+但是，GNU/GPL的自由软件哲学更关注于自由和社区利益，其自身的"传染性"，
+并不适合于商业软件和专有软件，因此便出现了更为实用和中庸的开源软件。
+
+开源软件是与GNU的精神一脉相承的。但与GPL相比，开源软件允许更大[[!授权自由]]。
+这样专有软件可以混合开源软件，人类的智慧得到更为自由的继承和传播。
+
+1.2. 为什么开源(Why)
+^^^^^^^^^^^^^^^^^^^^
+开源是历史的发展趋势，是社会进步，文明发展的需要。
+
+看看商业的精英们都在做些什么吧(按字母顺序排列)。
+  * Google : 对开源提供了非常多的关注和支持，比如Chrome和code.google.com等。
+  * IBM : 对开源的支持和透支相当巨大，最具代表性的是eclipse。
+  * Microsoft : 加快与开源社区的协作步伐，并开放了.NET Framework。
+  * Sun : 开源了很多产品，比如OpenSolaris/Java/OpenOffice/NetBeans/Classfish等。
+
+目前绝大部分商业软件都能找到其开源的替代品。
+并且很多优秀的开源软件也广泛的应用到了商业软件之中去。
+
+另外，参与开源项目，读源代码也是程序员最佳实践之路。
+不论是从个人角度，用户角度，商业角度，还是全人类社会的角度看，开源都非常有意义。
+
+1.3. 如何来开源(How)
+^^^^^^^^^^^^^^^^^^^^
+开源软件的定义由开源促进会(OSI http://opensource.org/)负责。
+一个软件满足以下两点就可以认为是开源软件了，
+ * 选择一个或多个OSI认证的开源许可。
+ * 以选择的许可来开放你的源代码。
+
+当然，开源并不仅限于软件，也可以是文档，还可以是一种思想。
+包括对开源的宣传，使用和反馈都是对开源的支持和贡献。
+
+2. 选择许可证
+^^^^^^^^^^^^^
+通过OSI的开源许可证非常之多。
+而如何使用开源软件许可证和如何使用开源软件到商业软件中去，
+则是个非常大的话题，并且还会涉及到专业的法律知识，这里不做具体讨论。
+
+简单来讲，应用比较多的有以下三种许可证：
+ 1. BSD许可证，可使修改专有，适用于商业性发行且不愿公开自己所修改的源码。
+ 2. GPL和LGPL许可证下的源码总是自由的，LGPL是GPL的一种宽松许可证。
+ 3. MPL许可证，可将软件(和任何对其的修改)分为受保护部分和贡献部分。
+
+3. 开放源代码
+^^^^^^^^^^^^^
+开放源代码，现在是件非常简单的事情，互联网上有很多优秀的项目托管平台，
+他们提供了比较成熟的开发，测试，发布，反馈的一些列框架和服务。
+优秀的软件层出不穷，每天都有新的开源项目加入。
+
+3.1. 后起之秀 google
+^^^^^^^^^^^^^^^^^^^^
+google的哲学就是简单，code.google.com很快成为开源大军中的一枝独秀。
+google开源服务可以通过以下任何一个连接进入
+
+ * http://code.google.com
+ * http://code.google.com/hosting/
+ * http://code.google.com/opensource/
+
+3.1.1. 创建一个google账户
+^^^^^^^^^^^^^^^^^^^^^^^^^
+创建一个新的开源项目，首先要有一个google账户。
+http://www.google.com/accounts/ManageAccount
+从上面的连接进入，选择"创建 Google 帐户"，
+然后填写表单，验证码和同意服务条款，非常简单。
+
+google账户可以使用很多的google功能和服务，
+比如，igoogle/gmail/gae等，因此建议人手一个。
+
+3.1.2. 创建一个开源项目
+^^^^^^^^^^^^^^^^^^^^^^^
+http://code.google.com/hosting/createProject
+打开页面，完成以下项目的填写，
+ * 项目名称(Project Name)，比如a9w3(要求小写字母(a-z)，数字(0-9)，连字符(-))。
+ * 简介(Summary)，显示项目时，其后面的一行简介。
+ * 描述(Description)，项目首页的主要介绍(支持wiki格式)。
+ * 选择许可证(Select a license)，选择合适的开源许可证。
+ * 类别标签(Labels)，方便分类用的标签。
+
+3.1.3. 完备你的项目
+^^^^^^^^^^^^^^^^^^^
+一般来讲通过自己账户下的"我的项目(My projects)"可以访问你的所有项目。
+也可以通过网址直接访问 http://code.google.com/p/a9w3/
+
+项目首页提供了以下几个标签，
+ * ProjectHome:项目首页，显示项目简介和描述。
+ * Downloand:提供了下载页面。
+ * Wiki:项目文档或手册。
+ * Issues:用来跟踪需求或缺陷等。
+ * Source:源代码版本管理(svn)。
+ * Administer:对项目进行全面设置，包括成员，SVN，邮件通知等。
+
+每一个标签都点击一次，每行说明都读上一下，你的项目就基本完备啦。
+然后，下载个svn客户端，提交第一份代码，开始你的自由旅程吧。
+
+3.2. 中坚力量 sourceforge
+^^^^^^^^^^^^^^^^^^^^^^^^^
+如果说code.google是"项目托管"(Project hosting)的大众版的话，
+那么，sourceforge.net(sf.net)就是专业版了。
+sf.net作为老牌的开源项目发祥地之一，提供的服务，相当于一台虚拟机。
+ * http://sf.net
+ * http://sourceforge.net
+
+PS:因为某些作者喜欢表达个人的政治意愿，导致sf.net在某段时间会被封杀 :(
+
+3.2.1. 创建一个sf账户
+^^^^^^^^^^^^^^^^^^^^^
+从首页的""开始或者点击以下连接，便可以进入创建账户的页面了。
+https://sourceforge.net/account/registration/
+填好必填项目，便可以获得一个账户了。
+另外，sf可以使用OpenId登陆，并自动完成注册。
+(PS:sf提示到：用户需要满18周岁，或者有监护人同意。)
+
+3.2.2. 创建一个开源项目
+^^^^^^^^^^^^^^^^^^^^^^^
+[[myproject:Register a New Project=>https://sourceforge.net/my/myprojects.php]]开始
+或直接点击这个连接https://sourceforge.net/register-project/stage1.php，
+一共需要以下3个步骤，
+  1. 填写项目信息(enter project information)
+     要求英文填写，有字数限制。项目名和unix名一般保持一样。
+  2. 选择许可证(select Licenses)
+     这个比较容易，如果没找到，可以打开全部许可证。
+  3. 选择分类(select project categories)
+     必须选择5个分类，"topic"分类必须选择。
+  4. 同意服务条款(user agreements)
+     同意所有条款，提交后，等待sf.net的审批。
+可以看到 sf.net 上申请一个项目是非常严格的，尤其对英文不好的同学们。
+而且要注意时差，一般来讲一个项目审批大概需要几个工作日。
+
+3.2.3. 开始基本的项目管理
+^^^^^^^^^^^^^^^^^^^^^^^^^
+假设a9w3是你的项目名，那么下面就是你的项目地址。
+http://sourceforge.net/projects/a9w3/
+
+可以看到基本的功能都列在以下的标签中，
+  * Summary: 首页，显示项目基本信息。
+  * Tracker: 需求，缺陷跟踪，还有更多。
+  * Mailing Lists:
+  * Forums: 论坛，文档等。
+  * Code: 提供了cvs和svn两种服务。
+  * Download: 
+  * Documentation: 比论坛更正式的文档。
+  * Tasks: 开发者使用的，比Tracker更严格些。
+  * Project Admin: 项目管理功能。
+
+以上的标签都含有很多子菜单，每个菜单都有特殊的意义。
+如果不清楚如何使用，可以参考其他项目的使用情况。
+或者使用sf的"帮助"(help)，都是英文的，但不难读懂。
+
+3.3.3. 高级项目管理和申请帮助
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sf.net 提供的功能非常多。通过 "Project Admin/Feature Setting"设置。
+
+====================== table : Feature ============================
+Feature                       Category                      Default
+Backups                       Data Recovery                 enabled
+File Release System           Download                      enabled
+Help Wanted                   Recruiting                    enabled
+Project Database (MySQL)      Web Hosting                   enabled
+Project Web                   Web Hosting                   enabled
+Virtual Hosts (VHOSTs)        Web Hosting                   enabled
+AN Guestbook                  Guest Book                    enabled
+CodeStriker                   Code Review                   enabled
+dotProject                    Project Management            enabled
+Gallery                       Image Gallery                 enabled
+Git                           Source Control                enabled
+Laconica                      Microblog                     enabled
+LimeSurvey                    Survey                        enabled
+MantisBT                      Bug Tracking                  enabled
+MediaWiki                     Wiki                          enabled
+phpBB                         Forum                         enabled
+Piwik                         Web Analytics                 enabled
+TaskFreak!                    Task Management               enabled
+Trac                          Wiki/Bug Tracking/Etc         enabled
+URL Shortening                Administrative                enabled
+Wikispaces                    Wiki                          enabled
+Wordpress                     Blogging                      enabled
+CVS                           Source Control                enabled
+Document Manager              Documentation                 enabled
+Forums                        Forums                        enabled
+Mailing Lists                 E-Mail                        enabled
+Project News                  News/Blog                     enabled
+Screenshots                   Media                         enabled
+Subversion                    Source Control                enabled
+Task Manager                  Task Management               enabled
+Tracker                       Bug/Defects                   enabled
+AN Guestbook                  Guest Book                    disabled
+CodeStriker                   Code Review                   disabled
+dotProject                    Project Management            disabled
+Gallery                       Image Gallery                 disabled
+Git                           Source Control                disabled
+Laconica                      Microblog                     disabled
+LimeSurvey                    Survey                        disabled
+MantisBT                      Bug Tracking                  disabled
+MediaWiki                     Wiki                          disabled
+phpBB                         Forum                         disabled
+Piwik                         Web Analytics                 disabled
+TaskFreak!                    Task Management               disabled
+Trac                          Wiki/BugTracking/Etc          disabled
+URL Shortening                Administrative                disabled
+Wikispaces                    Wiki                          disabled
+Wordpress                     Blogging                      disabled
+=====================================================================
+
+sf提供的功能还原不只以上这些，可以通过下面的连接学习各种服务的使用。
+http://apps.sourceforge.net/trac/sourceforge/wiki/Comprehensive%20service%20directory
+
+个人认为比较有特色的功能有以下几个，
+  * web 提供web主机，可以放置静态或动态网页。
+    http://apps.sourceforge.net/trac/sourceforge/wiki/Project%20web
+  * shell/ssh/sftp，这就相当于提供了一台虚拟服务器。
+    http://apps.sourceforge.net/trac/sourceforge/wiki/Shell%20service
+  * database(MySQL)功能。
+    http://apps.sourceforge.net/trac/sourceforge/wiki/Project%20database
+  * Virtual Host，可以绑定域名到项目。
+    http://apps.sourceforge.net/trac/sourceforge/wiki/Custom%20VHOSTs
+  * CVS 服务器管理，比如删除错误目录，模块。
+    http://apps.sourceforge.net/trac/sourceforge/wiki/CVS
+
+sf提供了非常详细的文档和手册，还有在线的人工支持。
+边使用边对照其文档，可以很快的掌握sf的整个项目周期内的各种操作。
+
+4. 对全民开源的一点展望
+^^^^^^^^^^^^^^^^^^^^^^^
+国外媒体InfoWorld总结出了与开源相关的2009年五大趋势，
+  1. 开源更加商业化。
+  2. 试验更多商业模式。
+  3. 更多收购交易。
+  4. 用户社区力量更加强大。
+  5. 开源更加主流化。
+
+希望本篇简短的介绍，能帮助大家了解，推广和加入开源社区。
+开源不论对个人，团体，企业，都是非常有益和有意义的事情。
+
+同时，开源也是一种自由的精神和哲学。
+
+5. 错误修正和内容补充
+^^^^^^^^^^^^^^^^^^^^^
+[![补充]] 2009-03-11
+
+非常感谢 [[哲思社区=&gt;http://www.zeuux.org/]] 徐继哲 的指点。
+"但关于自由软件哲学和开源软件哲学，其中的理解和表述基本是错误的。"
+"基本"这个词,我想是一种谦虚的表达。
+
+所以本文中关于非技术的部分，存在很大的误导，非常抱歉。
+但考虑到文章的完整性和本人对哲学的理解还不够，
+所以暂时不做修改，请见谅。
+
+请仅参考本文中使用code.google和sf.net的技术相关的内容。
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

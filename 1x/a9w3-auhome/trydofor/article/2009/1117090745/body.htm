@@ -1,0 +1,180 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Putty,PuttyCM,WinSCP组合拳
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-11-17
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 组合拳要求
+^^^^^^^^^^^^^
+    1) 不修改服务器设置，显示日文。
+    2) 有标签和标签名，以避免窗口太多或选错服务器。
+    3) 自动登录，避免每次输入密码。
+    4) 免费，免安装，绿色，可移植。
+    5) 同一屏内，便捷的操作多个服务器。
+    6) 同时在多个服务器上执行同一个命令，或叫群发。
+    7) 服务器密码每30天变更，客户端可批量修改密码。
+    8) ssh和scp能够配合默契。
+
+2. 核心拳术Putty
+^^^^^^^^^^^^^^^^
+官方网站 http://www.chiark.greenend.org.uk/~sgtatham/putty/
+里面有段文字 "Links to related software and specifications elsewhere."
+找到支持日文的修改版， http://hp.vector.co.jp/authors/VA024651/PuTTYkj.html
+完成要求(1) 的要求，在session的设置是，选择/Window/Translation树中找到
+"Received data assumed to be in which character set"下拉框并选择编码。
+
+Putty还有很多修改版和其他应用，参考网上手册。
+经常用的有，作为tunnel完成VNC连接。
+
+3. 锦上添花PuttyCM
+^^^^^^^^^^^^^^^^^^
+官方网站 http://puttycm.free.fr，可惜 GFWed，自行绕道或在文尾处下载。
+完成要求(2)到(8)靠的全是它(PuttyCM 由C#编写，需要.NET Framework 2.0)。
+
+3.1. 量产密码
+^^^^^^^^^^^^^
+ 1) 选择Database方式来保持连接信息,而不是putty的注册表形式。
+    在Connection Manager 窗口,右键选择"Create Database"
+ 2) 建立一个测试的连接。
+    注意在"Connection"里选择 "Enable Login Macro mode",以自动登录.
+ 3) Export XML文件。
+    菜单 Database/"Import and Export"/"Export ..."
+    选择 "Export passwords"
+
+经过以上3步，我们可以得到xml格式的配置文件了。
+
+======================== xml:puttycm 配置文件格式 ========================
+&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;!-- ******************************************************************--&gt;
+&lt;!-- *                                                                *--&gt;
+&lt;!-- * PuTTY Configuration Manager export file - All right reserved.  *--&gt;
+&lt;!-- *                                                                *--&gt;
+&lt;!-- ******************************************************************--&gt;
+&lt;!-- The following lines can be modified at your own risks.  --&gt;
+&lt;configuration version="0.7.1.136" savepassword="True"&gt;
+  &lt;root type="database" name="credit" expanded="True"&gt;
+    &lt;container type="folder" name="SSH" expanded="True"&gt;
+      &lt;connection type="PuTTY" name="10.4.5.241"&gt;
+        &lt;connection_info&gt;
+          &lt;name&gt;10.4.5.241&lt;/name&gt;
+          &lt;protocol&gt;SSH&lt;/protocol&gt;
+          &lt;host&gt;10.4.5.241&lt;/host&gt;
+          &lt;port&gt;22&lt;/port&gt;
+          &lt;session&gt;Default Settings&lt;/session&gt;
+          &lt;commandline /&gt;
+          &lt;description /&gt;
+        &lt;/connection_info&gt;
+        &lt;login&gt;
+          &lt;login&gt;shirj&lt;/login&gt;
+          &lt;password&gt;123456&lt;/password&gt;
+          &lt;prompt /&gt;
+        &lt;/login&gt;
+        &lt;timeout&gt;
+          &lt;connectiontimeout&gt;1000&lt;/connectiontimeout&gt;
+          &lt;logintimeout&gt;750&lt;/logintimeout&gt;
+          &lt;passwordtimeout&gt;750&lt;/passwordtimeout&gt;
+          &lt;commandtimeout&gt;750&lt;/commandtimeout&gt;
+        &lt;/timeout&gt;
+        &lt;command&gt;
+          &lt;command1 /&gt;
+          &lt;command2 /&gt;
+          &lt;command3 /&gt;
+          &lt;command4 /&gt;
+          &lt;command5 /&gt;
+        &lt;/command&gt;
+        &lt;options&gt;
+          &lt;loginmacro&gt;True&lt;/loginmacro&gt;
+          &lt;postcommands&gt;False&lt;/postcommands&gt;
+          &lt;endlinechar&gt;10&lt;/endlinechar&gt;
+        &lt;/options&gt;
+      &lt;/connection&gt;
+    &lt;/container&gt;
+    &lt;container type="folder" name="Telnet" expanded="True" /&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;
+=========================================================================
+
+根据xml格式，可以批量生产连接了，注意的地方有：
+ * xml编码是utf-16，双字节，对控制台下的某些工具的可能失效。
+ * timeout 标签里的时间根据服务器响应时间调整一下，我这都改成了2000。
+ * Telnet 这个container 可以删掉。
+
+等批量生产完xml配置文件后，回到PuttyCM，默认Database里的SSH分支删除。
+然后，进入菜单Database，最后"Import ..."一下。
+可以看到 Database中多了 Import分支，里面就是xml中的链接信息。
+
+利用 container type="folder",可以生成目录结构，如下图所示。
+[[&lt;=./data/db-import.png]]
+
+统计了一下，我能用的连接一共有121个，常用的有30多个。
+服务器每30天修改服务器密码，当然各服务器密码相同。
+如果手动修改，怎么也得小半天，现在只需要 查找替换和导入就可以了。
+
+3.2. 自由分屏
+^^^^^^^^^^^^^
+经常面对几个窗口操作，分屏是很惬意的事情，方便而且很酷。
+按住标准，拽到别的窗口，出现下图的样子，松手即可。
+至于怎么用，拽拽就知道了。
+[[&lt;=./data/win-split.png]]
+稍有遗憾的是，分屏窗口不能快速最大化，只能靠手拽调整视野。
+
+3.3. 命令群发
+^^^^^^^^^^^^^
+这个功能（MCS）很实用，好久也没整明白，直到有一天发现了分屏。
+
+选择窗口
+[[&lt;=./data/mcs-mwin-1.png]]
+
+发送date命令
+[[&lt;=./data/mcs-mwin-2.png]]
+
+3.4. 其他功能
+^^^^^^^^^^^^^
+ * connect external 用来在PuttyCM外部打开Putty窗口，也支持宏登陆。
+ * Dulpicate current tab 再自动登录一个，想象成session clone吧。
+ * Export putty sessons 从注册表中把Putty的信息拿出来。
+ * Post-login command 登陆后执行命令，比如设置语言环境。
+
+4. 文件传输WinSCP
+^^^^^^^^^^^^^^^^^
+官方网站 http://winscp.net/
+
+目前只能达到WinSCP到Putty的组合，而Putty到WinSCP不行。
+
+使WinScp使用*.ini的配置，注册表不是好套路。
+在Preferences找到“Preferences...”按钮，做两个重要修改。
+ * Storage/Configuration storage/INI file(winscp.ini)
+ * Integration/Applications 指定putty.exe和记住密码选项。
+
+有了INI我们就可以量产Session了，但是不能量产密码（目前不能简单解决）。
+ini中有关Session的信息如下
+=========================== txt: session 设置 ===========================
+[Sessions\(10.4.5.%2A)/root@10.4.5.242]
+HostName=10.4.5.242
+Password=A35C4A51532084E88A06FED1C14E5562982E3333286D6C72687269726E686E366C6D1E1E102834C38332E65BAB5DC4A73A7A
+UserName=root
+=========================================================================
+
+(10.4.5.%2A) 显示为目录"(10.4.5.*)"
+"*"进行了转义。注意 "\" 和 "/" 的区别。
+
+Password 是加密的，因此不能简单的量产密码。
+
+WinSCP可以Export ini配置文件，和导入putty在注册表中的Session。
+高级功能和设置，还是查看手册吧。
+
+5. 相关下载
+^^^^^^^^^^^
+ * PuttyCM v0.7.1 BETA (build 136) [[461K=&gt; ./data/puttycm-0.7.1-b-136.zip]]
+ * PuttyCS v1.8.1 对游离的Putty窗口群发命令 [[28K=&gt; ./data/puttycs-1.8.1.zip]]
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -1,0 +1,184 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Build Spring3 惊喜手记
+^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-12-21
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 简单目标
+^^^^^^^^^^^
+目标是，把spring-framework-3.0.0.RELEASE导入Eclipse，编译无错误。
+手册分六步：http://blog.springsource.com/2009/03/03/building-spring-3/
+简单明了，可操作起来，得到很多惊喜。
+
+本地环境：WinXP，ant-1.7.0，jdk1.6.0_16
+考虑网速，省去svn检出，下载了spring-framework-3.0.0.RELEASE-with-docs.zip。
+解压缩，进入projects/build-spring-framework目录，输入ant，切换窗口，忙别事。
+
+2. 首次惊喜
+^^^^^^^^^^^
+5分钟吧，切窗口回来，得到惊喜（控制宽度，文本进行了手工折行）。
+.............................................................................
+resolve.compile:
+[ivy:cachepath] :: Ivy 2.1.0 - 20090925235825 :: http://ant.apache.org/ivy/ ::
+[ivy:cachepath] :: loading settings :: 
+file = E:\mess\projects\spring-build\common\ivysettings.xml
+   [subant] Leaving directory: E:\mess\projects\org.springframework.instrument
+
+BUILD FAILED
+E:\mess\projects\spring-build\multi-bundle\artifact.xml:45: 
+The following error occurred while executing this line:
+E:\mess\projects\spring-build\multi-bundle\common.xml:71: 
+The following error occurred while executing this line:
+E:\mess\projects\spring-build\common\common.xml:91: 
+impossible to configure ivy:settings with given file: 
+E:\mess\projects\spring-build\common\ivysettings.xml : 
+java.text.ParseException: failed to load settings from 
+file:/E:/mess/projects/spring-build/common/ivysettings.xml: 
+impossible to define new type: class not found: 
+org.springframework.aws.ivy.S3Resolver in [] nor Ivy classloader
+.............................................................................
+
+一头雾水，几度搜索，得到线索和结论是，
+Err with Pre-existing ant ivy jar (org.springframework.aws.ivy.S3Resolver)
+删除 $ANT/lib/ivy-2.1.0.jar。
+
+继续ant，继续切换窗口。
+
+3. 再次惊喜
+^^^^^^^^^^^
+不知多久，窗口切换了好几回，文字在屏幕上上升，不亦乐乎。
+出了个插曲：java.lang.OutOfMemoryError: PermGen space
+修改环境变量：
+ANT_OPTS=-Xms256m -Xmx768m -XX:MaxNewSize=256m -XX:MaxPermSize=512m
+JAVA_OPTS=-Xms512m -Xmx1024m -XX:MaxNewSize=512m -XX:MaxPermSize=1024m
+
+继续 ant，继续切换窗口，但最终得到惊喜。
+.............................................................................
+[ivy:cachepath]                 ::::::::::::::::::::::::::::::::::::::::::::::
+[ivy:cachepath]                 ::              FAILED DOWNLOADS            ::
+[ivy:cachepath]                 :: ^ see resolution messages for details  ^ ::
+[ivy:cachepath]                 ::::::::::::::::::::::::::::::::::::::::::::::
+[ivy:cachepath]                 :: org.hibernate#com.springsource.org.hibernate;
+3.3.1.GA!com.springsource.org.hibernate.jar
+[ivy:cachepath]                 ::::::::::::::::::::::::::::::::::::::::::::::
+[ivy:cachepath]
+[ivy:cachepath]
+[ivy:cachepath] :: USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS
+   [subant] Leaving directory: E:\mess\projects\org.springframework.orm
+
+BUILD FAILED
+.............................................................................
+
+重复了几次，都没有成功，视乎是网络问题？！
+
+4. 换个角度
+^^^^^^^^^^^
+可能是点太背了吧，换个角度，转移到日本中转服务器碰碰运气。
+CentOS release 4.3，但是java6，ant1.7和svn都没有。
+
+======================== tty: 安装环境 ========================
+#安装 svn
+sudo yum -y install subversion // 简易安装
+svn --version // 1.0 版本太低
+sudo yum -y remove subversion // 卸载
+#下载rpm
+wget http://the.earth.li/pub/subversion/summersoft.fay.ar.us/pub/subversion/latest/1.6.0/rhel4/i386/subversion-1.6.0-1.i386.rpm
+wget http://the.earth.li/pub/subversion/summersoft.fay.ar.us/pub/subversion/latest/1.6.0/rhel4/i386/apr-0.9.12-2.i386.rpm
+wget http://the.earth.li/pub/subversion/summersoft.fay.ar.us/pub/subversion/latest/1.6.0/rhel4/i386/apr-util-0.9.12-1.i386.rpm
+wget http://the.earth.li/pub/subversion/summersoft.fay.ar.us/pub/subversion/latest/1.6.0/rhel4/i386/neon-0.28.4-1.i386.rpm
+wget http://the.earth.li/pub/subversion/summersoft.fay.ar.us/pub/subversion/latest/1.6.0/rhel4/i386/sqlite-3.5.9-4.1.i386.rpm
+#强制安装
+sudo rpm -ivh apr-0.9.12-2.i386.rpm --force
+sudo rpm -ivh apr-util-0.9.12-1.i386.rpm --force
+sudo rpm -ivh neon-0.28.4-1.i386.rpm --force
+sudo rpm -ivh sqlite-3.5.9-4.1.i386.rpm  --force
+sudo rpm -ivh subversion-1.6.0-1.i386.rpm
+svn --version
+&gt;svn, version 1.6.0 (r36650)
+
+#安装java6和ant1.7后设置环境变量
+cat ~/.bash_profile
+&gt;ANT_HOME=/usr/local/ant-1.7.0/
+&gt;JAVA_HOME=/home/shirj/bin/jdk1.6.0_17/
+&gt;PATH=$JAVA_HOME/bin/:$ANT_HOME/bin/:$PATH
+&gt;export ANT_OPTS="-Xms512m -Xmx1024m -XX:MaxNewSize=512m -XX:MaxPermSize=1024m"
+&gt;export JAVA_HOME
+&gt;export ANT_HOME
+&gt;export PATH
+
+#按照手册上进行
+svn ls https://src.springsource.org/svn/spring-framework
+svn ls https://src.springsource.org/svn/spring-framework/tags
+svn co https://src.springsource.org/svn/spring-framework/tags/spring-framework-3.0.0.RELEASE/
+du -sh spring-framework-3.0.0.RELEASE
+cd spring-framework-3.0.0.RELEASE/
+cd build-spring-framework
+ant
+
+#挨个目录理一下依赖关系
+for f in org.springframework.*; do 
+if [ -f $f/build.xml ]; then 
+cd $f; ant common-common.resolve; cd ..; 
+fi; 
+done
+
+du -sh ivy-cache
+&gt;210M    ivy-cache
+zip -9r ivy-cache.zip ivy-cache
+===============================================================
+网络条件很不错，下载ivy-cache.zip，替换到本地，23个工程好使了21个。
+org.springframework.spring-library
+spring-framework-reference
+org.springframework.aop
+org.springframework.asm
+org.springframework.aspects
+org.springframework.beans
+org.springframework.context
+org.springframework.context.support
+org.springframework.core
+org.springframework.expression
+org.springframework.instrument
+org.springframework.instrument.tomcat
+org.springframework.integration-tests
+org.springframework.jdbc
+org.springframework.jms
+org.springframework.orm
+org.springframework.oxm
+org.springframework.test
+org.springframework.transaction
+org.springframework.web
+org.springframework.web.portlet
+org.springframework.web.servlet
+org.springframework.web.struts
+
+出错的2个是，
+org.springframework.web.servlet工程
+org.springframework.web.servlet.view.BaseViewTests
+第173行有个字符，需要以UTF8编译。
+
+org.springframework.oxm工程
+主要是以下测试代码的问题。
+src/test/java/org/springframework/oxm/castor/
+src/test/java/org/springframework/oxm/xmlbeans/
+src/test/java/org/springframework/oxm/jaxb/
+原因是找不到以下8个类：
+Flight、FlightDocument、Flights
+FlightsDocument、FlightType
+ObjectFactory、Order、OrderItem
+
+4. 拒不信邪
+^^^^^^^^^^^
+对于“再次惊喜”只是的网络故障，始终不能归咎于人品问题。
+于是一步一步的，从头再来了一遍，依然没有成功 :(
+结论是，在彻彻底底搞清楚之前，千万不要和人品过不去。
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

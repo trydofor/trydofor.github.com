@@ -1,0 +1,1097 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>www.trydofor.com</title>
+    <link>http://www.trydofor.com</link>
+    <description>www.trydofor.com/trydofor</description>
+    <lastBuildDate>Mon, 20 Dec 2010 09:13:50 UTC</lastBuildDate>
+    <item>
+       <title>article:Linux下的R命令的配置</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1123130738/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1123130738/body.htm</guid>
+       <category>article IT技术 linux</category>
+       <description>R-Commands,是指rsh,rcp和rlogin.安全性不如ssh,scp.</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:46 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Class的类型和类型的Class</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1203100210/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1203100210/body.htm</guid>
+       <category>article IT技术 java</category>
+       <description>Class.getName()会如何显示？数据类型对于的Class又怎么表示？</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:46 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:实践MySQL多实例/多版本实践</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1204062123/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1204062123/body.htm</guid>
+       <category>article IT技术 mysql</category>
+       <description>在RedHat 9.0 (2.4.20-8 )中，实践MySQL的\\r\\n1) 单版本多实例\\r\\n2) 多版本单实例运行\\r\\n3) 多版本多实例运行</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:47 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:限制用户目录的sftp和scp,ssh</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1204072846/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1204072846/body.htm</guid>
+       <category>article IT技术 chroot linux ssh</category>
+       <description>通过pam的chroot,使openssh的sftp,ssh,scp能够限制用户在指定目录内活动</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:48 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:实践Log4j按级别分类输出</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1204084321/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1204084321/body.htm</guid>
+       <category>article IT技术 java log4j</category>
+       <description>采用log4j中的filter实现appender的自身过滤，从而实现按级别分类输出</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:48 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit 项目随笔</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1207025410/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1207025410/body.htm</guid>
+       <category>article credit IT项目</category>
+       <description>credit项目鸟瞰</description>
+       <pubDate>Tue, 09 Dec 2008 01:47:49 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:A9Text 模板</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1207034957/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1207034957/body.htm</guid>
+       <category>article templet</category>
+       <description>A9Text 模板, 请 SaveAs</description>
+       <pubDate>Thu, 11 Dec 2008 06:48:47 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:咖啡样的生活</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1208144518/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1208144518/body.htm</guid>
+       <category>article 回忆 生活</category>
+       <description>生活中有很多值得沉积的点滴小事,留下来慢慢回忆</description>
+       <pubDate>Mon, 08 Dec 2008 14:54:45 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:FCRON 试用手记</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1209123746/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1209123746/body.htm</guid>
+       <category>article IT技术 linux</category>
+       <description>Fcron是一款调度程序，目的是取替Vixie Cron</description>
+       <pubDate>Tue, 09 Dec 2008 12:37:46 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:iptables 梁山好汉</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1209135648/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1209135648/body.htm</guid>
+       <category>article IT技术 linux firewall</category>
+       <description>利用iptables的转发功能,制作简单的跳板</description>
+       <pubDate>Tue, 09 Dec 2008 14:01:34 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Trydofor的IT进程</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1211064709/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1211064709/body.htm</guid>
+       <category>article 生活 感悟</category>
+       <description>假如人生是一台电脑,现在都在运行着哪些进程呢?是否改整理一下</description>
+       <pubDate>Thu, 11 Dec 2008 06:47:09 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Trydofor的游戏进程</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1213130139/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1213130139/body.htm</guid>
+       <category>article 生活 回忆</category>
+       <description>不会玩就不会学习.回忆了至今为止的游戏历程.</description>
+       <pubDate>Sat, 13 Dec 2008 13:01:40 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:抓狂代码</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1214074100/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1214074100/body.htm</guid>
+       <category>article IT技术 糗事 回忆</category>
+       <description>现代人的生活,经常碰到糗事,或让人捧腹大笑或让人苦笑不得.程序员闹糗事,一般都称之为BUG,有种&quot;都是月亮惹的祸那种感觉&quot;.</description>
+       <pubDate>Sun, 14 Dec 2008 07:47:24 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:JAVA多线程基石</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1219143718/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1219143718/body.htm</guid>
+       <category>article IT技术 java 线程</category>
+       <description>java多线程基石,描述内存模型和线程基础设施.</description>
+       <pubDate>Fri, 19 Dec 2008 14:37:18 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:JAVA 多线程设计模式</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1224135056/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1224135056/body.htm</guid>
+       <category>article IT技术 java 线程 模式</category>
+       <description>&quot;Java多线程设计模式&quot;,中国铁道出版社 (ISBN 7-113-06402-7)一书的学习备忘</description>
+       <pubDate>Wed, 24 Dec 2008 13:50:56 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:创意牛诞节快乐</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1225033802/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1225033802/body.htm</guid>
+       <category>article 生活 娱乐</category>
+       <description>关于圣诞节和牛顿的故事,天天快乐.</description>
+       <pubDate>Thu, 25 Dec 2008 03:38:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:此Jiu非酒也</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1228072818/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1228072818/body.htm</guid>
+       <category>article 生活 娱乐</category>
+       <description>此Jiu非酒也,本人不能沾酒.</description>
+       <pubDate>Sun, 28 Dec 2008 07:28:19 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:公元二〇〇八小结</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2008/1231092837/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2008/1231092837/body.htm</guid>
+       <category>article 生活 感悟</category>
+       <description>辞旧迎新,总结2008</description>
+       <pubDate>Wed, 31 Dec 2008 09:28:37 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:﻿openSUSE-11.1 on TP SL500</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0113032859/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0113032859/body.htm</guid>
+       <category>article linux opensuse</category>
+       <description>在TP SL500 本本上安装 openSUSE11.1的步骤和重点问题整理</description>
+       <pubDate>Tue, 13 Jan 2009 03:28:59 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:IPMSG on openSUSE-11.1</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0113075318/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0113075318/body.htm</guid>
+       <category>article linux software</category>
+       <description>在openSUSE 11.1上编译,安装IPMSG.</description>
+       <pubDate>Tue, 13 Jan 2009 07:53:18 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:照猫画虎学太极(杨)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0113135859/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0113135859/body.htm</guid>
+       <category>article 生活 太极 健身</category>
+       <description>杨氏太极传统85式 摘要</description>
+       <pubDate>Tue, 13 Jan 2009 13:58:59 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:GoogleEarth话童年</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0202134941/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0202134941/body.htm</guid>
+       <category>article 回忆 感悟</category>
+       <description>在google earth上找到家乡,略略的数数美好的回忆</description>
+       <pubDate>Mon, 02 Feb 2009 13:49:41 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:活力门之软件开发模式</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0204145037/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0204145037/body.htm</guid>
+       <category>article IT项目 模式 credit</category>
+       <description>以最近的视角,最贴切的感受,讲述活力门软件开发模式背后的故事</description>
+       <pubDate>Wed, 04 Feb 2009 14:50:37 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之换座</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0223211340/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0223211340/body.htm</guid>
+       <category>article Credit故事 回忆</category>
+       <description>Credit故事系列,回忆一次全民参与的换座过程.</description>
+       <pubDate>Mon, 23 Feb 2009 13:13:40 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:流水豆腐帐之200903</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0302204557/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0302204557/body.htm</guid>
+       <category>article 生活 回忆 豆腐帐</category>
+       <description>豆腐帐,记录生活中有意思的时间点.</description>
+       <pubDate>Mon, 30 Mar 2009 00:54:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:自由之路之全民开源</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0310140935/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0310140935/body.htm</guid>
+       <category>article 开源 IT技术</category>
+       <description>简单介绍如何在google或sourceforge开源你的项目</description>
+       <pubDate>Tue, 10 Mar 2009 06:09:35 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:SF上SCM从CVS到SVN的迁移</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0313170649/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0313170649/body.htm</guid>
+       <category>article 开源 IT技术</category>
+       <description>sourceforge的cvs down了,sf建议使用其他SCM,于是决定从CVS迁移到SVN</description>
+       <pubDate>Fri, 13 Mar 2009 09:06:49 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之优良传统</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0326002522/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0326002522/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,记录Credit项目成功背后的一些重要的优良传统.朴实的并且容易做的,但确很少有人坚持并一直做的一些事情.</description>
+       <pubDate>Wed, 22 Apr 2009 15:44:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:流水豆腐帐之200904</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0401172742/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0401172742/body.htm</guid>
+       <category>article 生活 回忆 豆腐帐</category>
+       <description>豆腐帐,记录生活中有意思的时间点.</description>
+       <pubDate>Fri, 01 May 2009 04:03:53 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:梦境追踪之200904</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0402084226/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0402084226/body.htm</guid>
+       <category>article 娱乐 梦境追踪</category>
+       <description>眼睛一闭啊,就是另一个世界了.眼睛一睁哈,就是另一个世界了.</description>
+       <pubDate>Fri, 01 May 2009 04:02:42 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之新兵策略</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0402084330/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0402084330/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,Credit的新兵策略.</description>
+       <pubDate>Fri, 01 May 2009 04:04:48 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之服务器换血</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0419185213/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0419185213/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,对部分业务服务器进行一定规模的换血.</description>
+       <pubDate>Wed, 22 Apr 2009 15:44:17 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:梦境追踪之200905</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0501120325/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0501120325/body.htm</guid>
+       <category>article 娱乐 梦境追踪</category>
+       <description>眼睛一闭啊,就是另一个世界了.眼睛一睁哈,就是另一个世界了.</description>
+       <pubDate>Tue, 02 Jun 2009 11:04:57 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:流水豆腐帐之200905</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0501120425/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0501120425/body.htm</guid>
+       <category>article 生活 回忆 豆腐帐</category>
+       <description>豆腐帐,记录生活中有意思的时间点.</description>
+       <pubDate>Tue, 02 Jun 2009 11:05:07 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:梦境追踪之200906-12</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0602184312/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0602184312/body.htm</guid>
+       <category>article 娱乐 梦境追踪</category>
+       <description>眼睛一闭啊,就是另一个世界了.眼睛一睁哈,就是另一个世界了.</description>
+       <pubDate>Fri, 03 Jul 2009 11:26:44 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:流水豆腐帐之200906</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0602184416/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0602184416/body.htm</guid>
+       <category>article 生活 回忆 豆腐帐</category>
+       <description>豆腐帐,记录生活中有意思的时间点.</description>
+       <pubDate>Tue, 30 Jun 2009 12:26:13 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之CAFIS改造</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0606163242/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0606163242/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,对Cafis子系统超速改造.</description>
+       <pubDate>Sat, 06 Jun 2009 08:32:42 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之JIC升级</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0609192335/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0609192335/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,对JIC子系统升级和改造.</description>
+       <pubDate>Tue, 14 Jul 2009 01:55:45 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Credit故事之浪花山五壮士</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0610192225/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0610192225/body.htm</guid>
+       <category>article Credit故事 回忆 IT项目</category>
+       <description>Credit故事系列,午休去散步,休闲拍浪花.</description>
+       <pubDate>Tue, 01 Dec 2009 01:23:04 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:流水豆腐帐之200907</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0703192603/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0703192603/body.htm</guid>
+       <category>article 生活 回忆 豆腐帐</category>
+       <description>豆腐帐,记录生活中有意思的时间点.</description>
+       <pubDate>Tue, 01 Dec 2009 01:23:18 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:归档聊天记录(Skype4Py)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0829233839/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0829233839/body.htm</guid>
+       <category>article IT技术 python skype</category>
+       <description>需要归档skype聊天记录以备查,自己动手写代码.</description>
+       <pubDate>Mon, 31 Aug 2009 02:54:25 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:码工魄[margorp] 之图标设计</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0919175605/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0919175605/body.htm</guid>
+       <category>article 感悟 margorp 设计</category>
+       <description>独立设计的，比较满意的图标之一。</description>
+       <pubDate>Mon, 21 Sep 2009 04:02:23 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:国产图书之艾克思门</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/0927100406/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/0927100406/body.htm</guid>
+       <category>article 娱乐 读书</category>
+       <description>这些天做了两件事，一是读《可爱的Python》，二是泡“炮轰《JavaScript征途》”。</description>
+       <pubDate>Sun, 27 Sep 2009 16:14:47 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Putty,PuttyCM,WinSCP组合拳</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1117090745/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1117090745/body.htm</guid>
+       <category>article 手册 工具</category>
+       <description>Putty,PuttyCM,WinSCP组合拳在Windows上绿色,轻量,高效.</description>
+       <pubDate>Wed, 18 Nov 2009 09:34:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:SQL不慎迷失在WHERE</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1121131712/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1121131712/body.htm</guid>
+       <category>article IT项目 经验 教训</category>
+       <description>小失误，大事故，吸取教训，传播经验。“死神来了”系列告诉我们，小事要留神。</description>
+       <pubDate>Sun, 22 Nov 2009 08:04:39 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:《Spring揭秘》样书品读</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1201091957/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1201091957/body.htm</guid>
+       <category>article java 读书 IT技术</category>
+       <description>Crediter处女作，全职鼓捣一年半，666页，挺厚。有幸沾光，嚼之。</description>
+       <pubDate>Tue, 01 Dec 2009 03:39:14 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:码工魄之JAVA方法修炼之道</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1203132657/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1203132657/body.htm</guid>
+       <category>article IT技术 margorp 感悟</category>
+       <description>Method是编程的重要份子，如何得以霸气，强悍，永砸不扁。</description>
+       <pubDate>Sat, 19 Dec 2009 12:50:45 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:码工魄之图标生成器</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1208195146/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1208195146/body.htm</guid>
+       <category>article margorp 设计</category>
+       <description>HTML的使用DIV生成码工魄图标的小东西</description>
+       <pubDate>Tue, 08 Dec 2009 11:55:28 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:码工魄之JAVA异常处理</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1216133704/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1216133704/body.htm</guid>
+       <category>article IT技术 margorp 感悟</category>
+       <description>程序是一棵树，异常处理就是枝叶，枝叶反映着树的活力。</description>
+       <pubDate>Sat, 19 Dec 2009 12:52:02 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:麦穗记之五十天回顾</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1216133810/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1216133810/body.htm</guid>
+       <category>article 生活 麦穗记</category>
+       <description></description>
+       <pubDate>Sat, 27 Feb 2010 03:14:25 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Build Spring3 惊喜手记</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1221133959/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1221133959/body.htm</guid>
+       <category>article java spring ivy</category>
+       <description>把大象装冰箱，需要三步。Build Spring3 也迈了三步，得到很多惊喜。</description>
+       <pubDate>Mon, 21 Dec 2009 12:28:42 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:公元二〇〇囧小结</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2009/1231181948/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2009/1231181948/body.htm</guid>
+       <category>article 生活 感悟 岁末</category>
+       <description>辞旧迎新,总结2009</description>
+       <pubDate>Fri, 26 Feb 2010 12:49:20 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:低成本高笑果之两只大老虎(TBT)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0227131529/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0227131529/body.htm</guid>
+       <category>article 娱乐 Credit故事</category>
+       <description>内嵌儿歌，舞蹈，老歌，携有闪电效果，易死机。</description>
+       <pubDate>Sat, 27 Feb 2010 08:21:32 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:读书摘要之怪诞行为学</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0301102218/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0301102218/body.htm</guid>
+       <category>article 读书 摘要</category>
+       <description>“怪诞行为学”一书的摘要。</description>
+       <pubDate>Thu, 04 Mar 2010 09:29:55 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:应招聘半小时从入门到精通</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0409154602/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0409154602/body.htm</guid>
+       <category>article IT项目 糗事</category>
+       <description>“从入门到精通”，眼熟吧，你信吗？还是直接扔掉了吧。</description>
+       <pubDate>Mon, 12 Apr 2010 07:33:51 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:《设计模式之禅》试评</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0420133401/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0420133401/body.htm</guid>
+       <category>article 模式 读书</category>
+       <description>有幸成为试评员，有幸试评一下。</description>
+       <pubDate>Tue, 20 Apr 2010 05:36:24 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:《深入Java虚拟机(2)》摘录</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0427154940/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0427154940/body.htm</guid>
+       <category>article 读书 java 摘要</category>
+       <description>源于单例模式的GC，深入下JVM</description>
+       <pubDate>Tue, 27 Apr 2010 08:03:08 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:《数据库重构》读书笔记</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0607170631/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0607170631/body.htm</guid>
+       <category>article 读书 数据库 重构</category>
+       <description>数据库重构，扒了重盖。</description>
+       <pubDate>Mon, 07 Jun 2010 09:25:58 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:IVY+IVYDE 非经典实践</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0607220448/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0607220448/body.htm</guid>
+       <category>article IT技术 工具 ivy</category>
+       <description>在我和你间填个字。我爱你，就像蚂蚁爱日食。</description>
+       <pubDate>Mon, 07 Jun 2010 14:12:24 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:码工考古之DataSync</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0619205031/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0619205031/body.htm</guid>
+       <category>article java IT项目 数据库</category>
+       <description>DataSync 是一个小布丁点的工程，用来在两个数据库间倒扯数据。</description>
+       <pubDate>Sat, 19 Jun 2010 12:53:37 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:Scriptella ETL 快速上手</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/0707113250/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/0707113250/body.htm</guid>
+       <category>article java ETL 数据库</category>
+       <description>Scriptella ETL 学习曲线巨低，折腾数据之必备。</description>
+       <pubDate>Wed, 07 Jul 2010 03:32:50 UTC</pubDate>
+    </item>
+    <item>
+       <title>article:关系数据库的主键设计(讲稿)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/article/2010/1220171327/body.htm</link>
+       <guid>a9w3-auhome/trydofor/article/2010/1220171327/body.htm</guid>
+       <category>article 数据库 设计 讲稿</category>
+       <description>关系数据库的主键设计</description>
+       <pubDate>Mon, 20 Dec 2010 09:13:27 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:紫衣 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031326.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031326.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:50.3K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:46 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:紫衣 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031401.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031401.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:50.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:47 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:紫衣 03</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031438.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031438.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:45.7K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:47 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031535.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031535.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:74.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:48 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031559.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031559.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*535 size:70.7K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:48 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 03</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031632.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031632.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:42.8K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:49 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 04</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031729.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031729.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*535 size:90.3K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:49 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 05</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031749.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031749.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*535 size:68.7K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:50 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:海景 06</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031841.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031841.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:115K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:51 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:外景 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031934.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031934.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:80.5K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:51 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:外景 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123031951.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123031951.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:81.7K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:52 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:外景 03</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032057.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032057.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*535 size:84.6K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:52 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:外景 04</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032121.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032121.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:104K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:52 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:外景 05</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032143.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032143.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:98.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:53 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:粉衣 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032242.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032242.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:41.6K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:53 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:粉衣 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032312.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032312.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:70.2K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:54 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:粉衣 03</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032344.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032344.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:65.4K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:54 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:粉衣 04</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032403.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032403.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:51.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:55 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:粉衣 05</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032452.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032452.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:57.5K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:55 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:格格 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032517.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032517.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:150K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:56 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:格格 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032532.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032532.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:535*800 size:146K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:56 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 01</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032601.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032601.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:58.3K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:57 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 02</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032623.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032623.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:64.1K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:58 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 03</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032648.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032648.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:67.2K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:58 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 04</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032721.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032721.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:45.5K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:59 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 05</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032740.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032740.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:31.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:59 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 06</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032814.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032814.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:37.1K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:07:59 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 07</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032835.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032835.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:36.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:00 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 08</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032852.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032852.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:36.3K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:01 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 09</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032915.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032915.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:27.2K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:01 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 10</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032932.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032932.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:533*800 size:31.8K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:02 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 11</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123032957.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123032957.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*533 size:121K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:02 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:白纱 12</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123033009.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123033009.jpg</guid>
+       <category>gallery 婚照</category>
+       <description>pixel:800*533 size:125K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:第一次踏入云端,受到&quot;大块头&quot;的示好</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123041347.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123041347.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:57.1K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:03 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:四川火锅，领教了什么叫'红锅'和'飞饼'，辣的痛哭流涕</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123041435.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123041435.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:144K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:04 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:归途双虹</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123041539.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123041539.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:66.6K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:04 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:平流层之下</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123041724.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123041724.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:66.9K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:05 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:高原天气,变化无常</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123041906.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123041906.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:133K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:06 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:古木残骸</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042210.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042210.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:242K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:20 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:五花海．海底有五种颜色。成因：水草、矿物质、石头分布于湖底</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042323.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042323.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:138K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:20 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:高原水草</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042451.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042451.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:213K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:22 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:枯木逢春</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042551.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042551.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:139K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:22 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:手挥竖琴</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042637.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042637.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:192K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:23 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:古木十字手</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042736.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042736.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:125K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:23 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:水底景象(水清而且很深)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123042937.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123042937.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:80.7K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:24 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:铜离子的颜色</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043026.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043026.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:154K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:24 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:奇怪的树</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043136.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043136.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:187K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:25 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:珍珠滩瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043158.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043158.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:182K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:25 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043258.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043258.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:170K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:26 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043325.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043325.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:170K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:26 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043405.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043405.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:199K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:27 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:&quot;怪兽&quot;瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043440.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043440.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:177K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:28 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:据说是西游记片尾</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043518.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043518.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:154K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:28 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:清泉树间流</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043613.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043613.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:189K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:29 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043652.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043652.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:198K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:30 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043715.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043715.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:193K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:31 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:绿洲</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043814.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043814.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:165K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:31 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:水中天</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043905.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043905.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:232K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:32 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:瀑布</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123043933.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123043933.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:228K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:32 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:水,清,凉</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044041.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044041.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:210K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:33 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:黄龙</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044212.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044212.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:200K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:34 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:黄龙</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044229.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044229.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:118K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:34 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:黄龙</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044244.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044244.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:165K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:35 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:黄龙</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044303.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044303.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:131K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:35 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:黄龙</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1123044320.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1123044320.jpg</guid>
+       <category>gallery 九寨黄龙</category>
+       <description>pixel:800*600 size:216K type:jpg</description>
+       <pubDate>Mon, 24 Nov 2008 08:08:36 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:JIC小组,美好回忆的开始</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1205105955.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1205105955.jpg</guid>
+       <category>gallery credit jic edgesoft</category>
+       <description>pixel:800*600 size:114K type:jpg</description>
+       <pubDate>Fri, 27 Mar 2009 01:00:52 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:livedoor事件时最人丁兴旺的腐败</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1205111042.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1205111042.jpg</guid>
+       <category>gallery credit edgesoft</category>
+       <description>pixel:800*600 size:105K type:jpg</description>
+       <pubDate>Wed, 11 Feb 2009 00:47:16 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:阶级弟兄,有点高</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1205111308.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1205111308.jpg</guid>
+       <category>gallery credit edgesoft</category>
+       <description>pixel:800*600 size:105K type:jpg</description>
+       <pubDate>Wed, 11 Feb 2009 00:47:17 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:啊菜出逃</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1205111548.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1205111548.jpg</guid>
+       <category>gallery credit edgesoft</category>
+       <description>pixel:800*600 size:128K type:jpg</description>
+       <pubDate>Wed, 11 Feb 2009 00:47:17 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:绝地反击</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2008/1205111820.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2008/1205111820.jpg</guid>
+       <category>gallery credit edgesoft</category>
+       <description>pixel:800*600 size:92K type:jpg</description>
+       <pubDate>Wed, 11 Feb 2009 00:47:17 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:奔三唐装卧室全身留念</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2009/0208051454.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2009/0208051454.jpg</guid>
+       <category>gallery trydofor</category>
+       <description>pixel:768*1024 size:152K type:jpg</description>
+       <pubDate>Sun, 08 Feb 2009 05:14:54 UTC</pubDate>
+    </item>
+    <item>
+       <title>gallery:奔三唐装卧室半身不带眼镜留念</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/gallery/data/2009/0208051550.jpg</link>
+       <guid>a9w3-auhome/trydofor/gallery/data/2009/0208051550.jpg</guid>
+       <category>gallery trydofor</category>
+       <description>pixel:1024*768 size:134K type:jpg</description>
+       <pubDate>Sun, 08 Feb 2009 05:15:50 UTC</pubDate>
+    </item>
+    <item>
+       <title>notice:权责声明</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/helpers/notice/20081123113009/body.htm</link>
+       <guid>a9w3-auhome/trydofor/helpers/notice/20081123113009/body.htm</guid>
+       <category>notice</category>
+       <description>网站的授权,声明及鸣谢</description>
+       <pubDate>Mon, 24 Nov 2008 08:11:04 UTC</pubDate>
+    </item>
+    <item>
+       <title>notice:臭豆腐(trydofor)</title>
+       <link>http://www.trydofor.com/a9w3-auhome/trydofor/helpers/notice/20081123115807/body.htm</link>
+       <guid>a9w3-auhome/trydofor/helpers/notice/20081123115807/body.htm</guid>
+       <category>notice</category>
+       <description>臭豆腐的简介</description>
+       <pubDate>Mon, 24 Nov 2008 08:11:08 UTC</pubDate>
+    </item>
+  </channel>
+</rss>

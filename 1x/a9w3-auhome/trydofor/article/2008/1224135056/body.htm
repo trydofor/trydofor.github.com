@@ -1,0 +1,463 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+JAVA 多线程设计模式
+^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2008-12-24
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 适用范围与知识背景
+^^^^^^^^^^^^^^^^^^^^^
+本文是对"Java多线程设计模式",中国铁道出版社 (ISBN 7-113-06402-7)
+一书的学习备忘,适用于java1.4.
+实际项目中应该尽量回避多线程,如果必须使用,最好使用DougLee大师的杰作.
+
+让我也具有DougLee一样能执行多线程的计算机头脑吧 :D
+
+2. Thread 状态图
+^^^^^^^^^^^^^^^^
+================= txt figure-1 : Thread Status =================
+       (_)                Thread Status /jdk1.4
+        | new          www.trydofor.com 2008-12-21
+  +------------+      =============================   
+  |  initial   |       * Object's method/status       
+  +-----+------+       @ Thread's method/status       
+        | @start()     synchronized can not timeout   
+  +------------+                                      
+  | executable |&lt;------------------------------------+
+  +-+----------+   @sleep() +----------+ @timeout    |
+    |        ^    +--------&gt;|@sleeping +------------&gt;|
+    | @yield |    |         +----------+ @interrupt()|
+    v        |    |                                  |
+  +----------+-+  |*wait()  +----------+             |
+  |  running   |--+--------&gt;|*wait-set | @timeout    |
+  +-----+------+  |         +----+-----+             |
+        |         |              | *notify/All()     |
+        | @run()  |              | @interrupt()      |
+        |         | synch-       v                   |
+        v         | ronized +----------+  acquire    |
+  +------------+  +--------&gt;|*race-set |------------&gt;|
+  |   final    |  |         +----------+             |
+  +-----+------+  |         +----------+  done       |
+        | sys gc  +--------&gt;| blocking +------------&gt;|
+       (8)        block-io  +----------+
+================================================================
+
+3. 脆弱独木桥(SingleThreadExecution)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+脆弱的独木桥,又称危险区(Critical Section),只能承重一个人,
+因此一次只能允许一个线程执行.
+当共享资源可以被多个线程访问,且资源状态会改变时,就可以考虑该模式.
+
+对危险区的划分是重点,以人脑模拟电脑思考程序的执行过程.
+同时要注意死锁和继承等对安全性的破坏.
+
+如果看到 synchronized 相互嵌套,基本上就会死锁了.
+以下代码和Thread.sleep()很像 :0
+
+================== java :ThreadSleep.java ======================
+public class ThreadSleep {
+    public static void sleep(long ms) throws InterruptedException{
+        if(ms&gt;0){
+            Object obj = new Object();
+            synchronized(obj){
+                obj.wait(ms);
+            }
+        }
+    }
+}
+================================================================
+
+4. 只许参观不许摸(Immutable)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+像java.lang.String一样,实例一旦产生,状态就不再改变.
+对于一个只读的东东,即便同时有无数个线程访问,也没什么问题.
+
+final class/method/field/parameter 可以很大的提高安全性.
+
+值得注意的是,不要出现以下代码中的问题,错把 mutable 数据暴露出去.
+
+====================== java : Mutable.java =====================
+public final class Mutable {
+
+    private final StringBuffer sb;
+    
+    public Mutable(String str){
+        sb = new StringBuffer(str);
+    }
+    
+    public StringBuffer getText(){
+        return sb;
+    }
+}
+================================================================
+
+5. 不见不散(GuardedSuspension)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+如果条件不满足,就一直等,不见不散.
+便于记忆,可以理解成多线程版的 if
+
+====================== java : Queue.java =======================
+import java.util.LinkedList;
+
+public final class Queue {
+    private final LinkedList queue = new LinkedList();
+    
+    public synchronized Object get(){ // 为什么同步this
+        while(queue.size()&lt;=0){ // 为什么不用If
+            try{
+                wait(); // 为什么不是Thread.sleep()
+            }catch(InterruptedException e){
+                // can not be interrupted
+            }
+        }
+        return queue.removeFirst();
+    }
+    
+    public synchronized void put(Object obj){
+        queue.addLast(obj);
+        notifyAll();
+    }
+}
+================================================================
+
+6. 你们聊,我有事先走了(Balking)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+不见不散固然为人所敬仰,但不是所有时候都需要不见不散.比如,
+
+ * 不需要去执行时.
+   比如我经常神经性的Ctrl+s,但编辑器只有当文件变更时,才真正保持.
+ * 不想等到条件成立时.
+   小兔说:我妈妈叫我小兔兔.
+   小猪说:我妈妈叫我小猪猪.
+   小鸡说:你们聊,我有事先走了!
+ * 只能执行一次时.
+   发工资了,如果能多领几份该多好啊 :D
+
+把Balking的状态通知给调用者的方式.
+ * 忽略balk的发生.
+ * 以返回值表达,比如true/false
+ * 以异常的形式通知.
+
+======================= java : Data.java =======================
+public abstract class Data {
+
+    private boolean changed;
+    public final synchronized void change(){
+        changed = true;
+    }
+    public final synchronized void save(){
+        if(!changed) return;
+        
+        doSomething();
+        changed = false;
+    }
+    protected abstract void doSomething();
+}
+================================================================
+
+7. 生产者消费者(ProducerConsumer)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+生产者和消费者在不同的线程上运行,一般情况下,两者的处理速度存在很大差异.
+因此在两者之间存在一个隐藏的"桥梁"来缓解这样的差异.管道(pipe)模式,是该
+模式的简化形式.
+
+所有参与者,
+ * Data 被传来传去的东西.
+ * Producer 生产Data的家伙.
+ * Customer 消灭Data的家伙.
+ * Channel  以上三者的纽带,是传送,调度的核心.
+
+为什么Producer不能直接把Data给Customer呢?
+因为这样的话,就是Producer线程来完成Customer的动作了.
+
+参与者多了,有必要设置超时和可取消.好的习惯是让Chanel互斥的方法 throws
+InterruptedException,隐式的告诉调用者,该方法具有以下含义,
+ * 我可能很耗时
+ * 我可以被取消
+ * 我可能调用了Object.wait(),Thread.sleep(),Thread.join().
+   注意,Object.wait()被interrupt的时候,需要重新获得锁,才会被执行.
+
+====================== java : Channel.java =====================
+import java.util.LinkedList;
+
+public class Channel {
+    private final int capacity;
+    private final LinkedList datas;
+    
+    public Channel(int capacity){
+        this.capacity = capacity;
+        this.datas = new LinkedList();
+    }
+    
+    public synchronized void put(Object obj) throws InterruptedException{
+        while(datas.size()&gt;=capacity){
+            wait();
+        }
+        datas.addLast(obj);
+        notifyAll();
+    }
+    
+    public synchronized Object get() throws InterruptedException{
+        while(datas.size()&lt;= 0){
+            wait();
+        }
+        
+        Object obj = datas.removeFirst();
+        notifyAll();
+        return obj;
+    }
+}
+================================================================
+
+8. 读写锁(ReadWriteLock)
+^^^^^^^^^^^^^^^^^^^^^^^^
+为了解决以下两种冲突,
+ * 读写(read-write conflict)
+ * 写写(write-write conflict)
+
+在read和write的时候,都采用以下的结构,
+===================== java : Example.java ======================
+    ReadWriteLock lock = new ReadWriteLock();
+    
+    public String read() throws InterruptedException{
+        lock.readLock(); // 为什么不可以在try内呢?
+        try{
+            return doRead();
+        }finally{
+            lock.readUnlock();
+        }
+    }
+    
+    public void write(String str) throws InterruptedException{
+        lock.writeLock();
+        try{
+            doWrite(str);
+        }finally{
+            lock.writeUnlock();
+        }
+    }
+================================================================
+
+================== java : ReadWriteLock.java ===================
+public final class ReadWriteLock {
+    private int readingReaders = 0;
+    private int waitingWriters = 0;      // 不计数会有什么问题?
+    private int writingWriters = 0;
+    private boolean preferWriter = true; // 为什么添加这个标记?
+    
+    public synchronized void readLock() throws InterruptedException{
+        while(writingWriters&gt;0 || (preferWriter &amp;&amp; waitingWriters&gt;0)){
+            wait();
+        }
+        readingReaders++;
+    }
+    
+    public synchronized void readUnlock() throws InterruptedException{
+        readingReaders --;
+        preferWriter = true;
+        notifyAll(); // 可能唤醒哪些线程(Reader/Writer)?
+    }
+    
+    public synchronized void writeLock() throws InterruptedException{
+        waitingWriters ++;
+        try{
+            while(readingReaders&gt;0|| writingWriters&gt;0){
+                wait();
+            }
+        }finally{
+            waitingWriters --;
+        }
+        writingWriters ++;
+    }
+    
+    public synchronized void writeUnlock() throws InterruptedException{
+        writingWriters --;
+        preferWriter = false;
+        notifyAll();  // 可能唤醒哪些线程(Reader/Writer)?
+    }
+}
+================================================================
+
+9. 临时工/合同工(ThreadPerMessage/WokerThread)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+这两种模式的基本特点,就是把工作交给其他的线程去处理,
+把调用(invocation)和执行(execution)放在不同个线程中,以提高响应能力.
+
+临时工相当灵活,呼之即来,挥之即去,不过缺点是浪费资源,不便控制.
+合同工则可以弥补上述缺点,让工作持续稳定.
+
+一般来讲,多使用线程池技术,和既定的安全框架,不多累述.来道头脑风暴吧,
+====================== java : Test.java ========================
+public class Test {
+    public void doOther(final Object obj){
+        new Thread(){
+            public void run(){
+                System.out.println(obj);
+                // Business Method
+            }
+        }.start();
+    }
+}
+================================================================
+
+完成method方法,使下面程序只输出"12",而不输出"3";
+不可以在method中print任何字符出来.
+====================== java : Quest.java =======================
+public class Quest {
+    public static void haha(Object obj){
+        System.out.print("1");
+        method(obj);
+        System.out.print("2");
+        synchronized(obj){
+            System.out.print("3");
+        }
+    }
+    
+    public static void main(String[] args) {
+        haha("");
+    }
+}
+================================================================
+一种答案:
+==================== aes : 密码是trydofor ======================
+WXDDkl4eASEwISEwIS0fccK1w6jCkCgoBcOVwpEEWmvCjBFDLRrDiwE4w7/CpSEx
+NjAhZMO2w4XDicK1w4k9w4tELQ7CnyExMyFsw6dsL1Qfw7RRwqjDhcK4w49/LRjD
+oRdCw7hmw47ChkPCjcODw73CqijDksKvLXIIW0TDqnbDvXbCisOhw7bCkFxrR8Ks
+LS9dwpTDhgg1c8KLYyExMiHCiCkWwrs7wpotITEzIcOyw608wpd2Lj/Dt1owecOo
+ITExIQPDhC3CihBpwrXCrCEzNCHCjnsSccOuwovCq8KlN8KCLXUvwpM6a3LDimXC
+vWVmUsOfPDPCpC3CqsONSMKRw5N8IMKtcsKecELDq8OgwoZOLV8dw4zDpDEPwo3C
+gMKkw50fVGghMTEhcjUtw455KHIdICMhMTIhfMK2ccOEccOFSMK7LRrDgcOIM1Yh
+MzkhwoDDgxlpwoXCtMKww6Q3wqgtwpVzM8KSwooqw7LCv1TDi0hwc8O2wqw7LSbD
+hUIRw7hxw6nDpkDDssOBYx/Dt8KQwoQtaMOfX8K6w6vDpMO/SW0Eb0fCpsKzITM0
+IcKyLTDDlE3DvnbDjC7Cl8KAw7wVdiExMSE4wqN5LcOcBR7DnMO6wqlwYsOaEsKK
+PhPDlMKQGC0GITE2MCHDpMK+KsOzMlvClBDDimgRFz8GLcOLHcONwrYpw7gjw7lM
+V8KLwpp4ITkhVcOzLcKGQ8ODKcKSw4HDpMO2H34pF8O5GcKkOi1+VmMYwrjDrBPD
+rmATGUBjFsKKwpYtITM5ISjDusOBw6fDtTDCrXXDgMKnwosBE1tyLU0RRMOvwp1M
+wr3Drj/Cnz5UaHtEUi0FWCrDmTVYw6nChMKmQMKnw7NiLEXCgS0hMTMhMMOvO28r
+Z8O9w4PCsHTCkA4vXEEtM8KLw71nWBJINDLDrS4PwrjDjzzDuC3CkcK/OMKMwpXC
+vcOzw5R3HcKzUX7CrE8uLcKEYxMGb8Kpw7dLITAhBQTCqsKVwpfDjHUtwoMSccKf
+wo5hw6cyw70kw4pawocqwoXDrS3Dlm/CoUU4wqtXBlQVwr5hD8KTcEAtf8KmOzIh
+MTMhwr3DpcKJOlfDqcK1E8KNwqPCpC3CmsKKwrzCmBZEwpIBw59TbyBZwosZw60t
+X8O0wo0GwpvDozVMJX0eFMOiFm9zLcKnwp7CrkpVwo3DlMK/dcKdSijDhMOJw5oP
+LQjDrhHDl8Knw58hMTAhw7Y9Mx/DtMO0wrbDjAYtwrBcw6LDiCVtworDmsK0w6fD
+iMKbwqrCgHgBLcODwoTDkCExMyHDkMKnEMKTw4ojMErCjBUwwpItUsKNwr/CucOe
+N1HCn1jCm8OsBmnCgwVrLcOlwqN6LmnDksKAY01vPSEzMyHCmiEwIWtMLcKhw5dU
+wprCiCEzNCHDlEJLw6XDisO0wqzDvh7Diy3CvMKFITEzITM6w5rCvMOMITEwIcOK
+wpjDuAM=
+================================================================
+
+10. 拿订单提货(Future)
+^^^^^^^^^^^^^^^^^^^^^
+要那么长时间才完成啊,我先占个座吧,好了告诉我.
+Future模式,可以设置返回值,也可以采用callback,这依赖于订货者的要求.
+
+==================== java : FutureData.java ====================
+public class FutureData implements Data {
+    private Object data = null; // 真正返回值
+    private volatile boolean ready = false;
+    
+    public synchronized void set(Object obj){
+        if(ready){
+            return;
+        }
+        data = obj;
+        ready = true;
+        notifyAll();
+    }
+    
+    public synchronized Object get(){ // 一直等下去
+        while(!ready){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+            }
+        }
+        return data;
+    }
+    
+    public boolean isReady(){ // 可以来检查.
+        return ready;
+    }
+}
+================================================================
+
+11. 你还是自裁吧(TwoPhaseTermination)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+从外界终止一个执行中的线程是不安全的,最好的办法是让它自己搞定.
+
+不要使用Thread.stop(),它已经被 deprecated 的了,因为他强制终止线程.
+
+==================== java : DoItYouself.java ===================
+public class DoItYouself extends Thread{
+    private volatile boolean needShutdown = false; // 为何 volatile
+    
+    public void shutdown(){
+        needShutdown = true;
+        interrupt(); // 为什么呢?
+    }
+    
+    public final void run(){
+        try{
+            while(!needShutdown){
+            //doWork();
+            }
+        }catch(InterruptedException e){
+        }finally{
+            //doShutdown();
+        }
+    }
+}
+================================================================
+
+另外,下面代码会输出"13",因为ShutdownHook Thread.start()会在System.exit()或
+所有非Deamon线程结束时被调用.
+==================== java : DoItYouself.java ===================
+public class ShutdownHook{
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(
+            new Thread(){
+                public void run(){
+                    System.out.print("3");
+                }
+            }
+        );
+        System.out.print("1");
+        System.exit(0);
+        System.out.print("2");
+    }
+}
+================================================================
+
+[[!拓展内容, interrupt() 的作用.]]
+调用interrupt(),会产生以下作用之一,不可兼得中断异常和中断状态.
+  1) 当线程sleep/wait/join时,抛出中断异常(InterruptedException).
+  2) 非1)时,线程变成中断状态(interrupted),可以使用Thread.interrupted();
+======================== java : 相互转换 =======================
+    InterruptedException se = null;
+    try{
+        if(Thread.interrupted()){
+            throw new InterruptedException(); // 状态 =&gt; 异常
+        }
+    }catch(InterruptedException e){
+        Thread.currentThread().interrupt(); // 异常 =&gt; 状态
+        se = e; // 异常 =&gt; 异常
+    }finally{
+        //doShutdown();
+    }
+    if(se != null) throw e;
+================================================================
+
+12. 私有保险箱(ThreadLocalStorage)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ThreadLocal模式下的多线程行为表面上看与单线程很像,可以不用考虑互斥.
+这种以线程为主键的map,可以很好的分离开线程私有的信息,就像局部变量一样.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

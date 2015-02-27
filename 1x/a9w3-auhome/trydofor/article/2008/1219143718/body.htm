@@ -1,0 +1,110 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+JAVA多线程基石
+^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2008-12-17
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 内存模型
+^^^^^^^^^^^
+主存储器(main memory),保存所有Object,为所有线程共有.
+工作存储器(working memory),各线程私有空间.
+
+线程无法直接读写主存储器,必须把必要数据复制(working copy)到工作存储器.
+这些操作,由以下3组共6个原子操作(atomic action)组成.
+
+ * lock/unlock 对实例进行获得/解除锁定
+ * read/write  主存储器和工作存贮器的数据读/写
+ * use/assign  工作存储器和线程的数据读/写
+ 
+ .....................................................................
+ ------------------------------------------------------------&gt; 时间线
+             ^ Object.field -----&gt; use      |                  线程A
+             |              &lt;----  assign   |                  存储器A
+ ---|--------|------------------------------|-------|--------
+    |lock    |read                          |write  | unlock   操作
+ ===v========|==============================|=======v========
+             | Object.field                 v                  主存储器
+                                                               (共享)
+ ===================================================^========
+    x can not lock but wait ...                     | lock   
+ ---|-----------------------------------------------|--------                                                                
+                                                               线程B 
+                                                               存储器B
+ .....................................................................
+
+2. synchronized的作用
+^^^^^^^^^^^^^^^^^^^^^
+synchronized 是负责线程的共享互斥的.
+被其保护的某个东西,需要进行线程同步和内存同步.
+
+以下是常见的synchronized 写法.
+======================== java : Synchronized.java ========================
+/**
+* methodSA 和methodSB 是等价的
+*/
+synchronized void methodSA(){
+    // do something
+}
+void methodSB(){
+    synchronized(this){
+        // do something
+    }
+}
+
+/**
+* methodSC 和methodSD 是等价的
+*/
+static synchronized void methodSC(){
+    // do something
+}
+static void methodSD(){
+    synchronized(Synchronized.class){
+        // do something
+    }
+}
+
+=====================================================================
+
+线程永远在自己的工作存储器上工作,当碰到synchronized 块时,会发生
+  * 当线程将要进入时,完成2个动作.
+    1) 把当前工作存储器的数据write到主存储器
+    2) 把主存储器的数据read到工作存储器
+  * 当线程将要离开时,完成1个动作.
+    1) 把当前工作存储器的数据write到主存储器
+
+3. volatile的作用
+^^^^^^^^^^^^^^^^^
+volatile 不负责线程的共享互斥,而是进行内存同步.
+
+基本类型(primitive type),如char,int 的赋值和引用操作是原子级的.
+对象等引用类型(reference type)的赋值和引用也是原子级的.
+但是,long,double 的赋值和引用却不是原子级的.
+
+当线程欲引用 volatile 字段的值时,通常会从主存储器拷贝到工作存储器,
+相反,当线程赋值给 volatile字段后,通常会从工作存储器反映到主存储器.
+
+4. Object的休息室
+^^^^^^^^^^^^^^^
+Object是java之源,也是synchronized和volatile保护的对象.
+wait/notify/notifyAll是Object的方法,而不是Thread特有的.
+
+休息室(wait set),是为了描述线程而引进的虚拟概念,它既不真实的也不可操作.
+但是,所有实例都有这么一个休息室,是所有等待执行的线程的集合.暂停的线程,
+永远会呆在休息室中,除非发生以下任一情况.
+
+ * 有其他线程以 notify/notifyAll 方法唤醒该线程.
+ * 有其他线程以 interrupt 方法唤醒该线程.
+ * wait 方法已经到期.
+
+因此 wait/notify/notifyAll,都是对休息室的操作以调度线程.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -1,0 +1,344 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+实践MySQL多实例/多版本实践
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2005-02-23
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 实现目标
+^^^^^^^^^^^^
+    1) 同一版本的多个实例同时运行。
+       两个4.1.9的实例分别于3301，3302端口监听并提供服务。
+
+    2) 不同版本的单个实例同时运行。
+       4.1.9和5.0.2的实例分别于3304，3305端口监听并提供服务。
+
+    3) 不同版本的多个实例同时运行。
+       4.1.9的2个实例分别于3301，3302端口监听并提供服务。
+       5.0.2的2个实例分别于3308，3309端口监听并提供服务。
+
+2. 必要准备
+^^^^^^^^^^^
+2.1. 运行环境
+^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+cat /proc/version
+&gt;Linux version 2.4.20-8 (bhcompile@porky.devel.redhat.com)(gcc version
+&gt;3.2.2 20030222(Red Hat Linux 3.2.2-5))#1 Thu Mar 13 17:54:28 EST 2003
+
+ls -l |grep mysql|awk '{print $5,$9}'
+&gt;33368998 mysql-max-5.0.2-alpha-pc-linux-i686.tar.gz
+&gt;28195102 mysql-standard-4.1.9-pc-linux-gnu-i686.tar.gz
+=======================================================
+
+2.2. 理论基础
+^^^^^^^^^^^^^
+mysqld 读取配置文件的顺序.
+    1) /etc/my.cnf, Global options.
+    2) $DATADIR/my.cnf, Server-specific options.
+    3) defaults-extra-file,
+       The file specified with --defaults-extra-file=path, if any
+    4) ~/.my.cnf, User-specific options.
+    
+mysqld 多进程运行的必要条件是以下项目必须独立分开。
+    * pid-file
+    * datadir
+    * socket
+    * port
+
+3. 安装程序
+^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+#添加mysql组和用户
+groupadd mysql
+useradd -g mysql mysql
+#解包到/usr/local
+tar -xzf mysql-standard-4.1.9-pc-linux-gnu-i686.tar.gz -C /usr/local
+tar -xzf mysql-max-5.0.2-alpha-pc-linux-i686.tar.gz -C /usr/local
+#建立软链接，方便操作
+cd /usr/local
+ln -s mysql-standard-4.1.9-pc-linux-gnu-i686 mysql4
+ln -s mysql-max-5.0.2-alpha-pc-linux-i686 mysql5
+#初始化data,更改文件属性
+cd mysql4
+scripts/mysql_install_db --user=mysql
+chown -R root  .
+chown -R mysql data
+chgrp -R mysql .
+#复制data，以供单版本多实例分配
+cp -a data data_1
+cp -a data data_2
+#初始化data,更改文件属性
+cd ../mysql5
+scripts/mysql_install_db --user=mysql
+chown -R root  .
+chown -R mysql data
+chgrp -R mysql .
+#复制data，以供单版本多实例分配
+cp -a data data_1
+cp -a data data_2
+=======================================================
+
+4. 配置与测试
+^^^^^^^^^^^^^^^
+利用 $MYSQL/bin/mysqld_multi 来实现，需要把$MYSQL/bin放入$PATH。
+其实，通过启动多个 $MYSQL/bin/mysqld_safe 脚本也实现，
+不过 mysqld_multi 提供了更方便更简单的途径，不用有点可惜：）
+
+4.1. 单版本多实例的实现
+^^^^^^^^^^^^^^^^^^^^^^^
+4.1.1. 配置mysql
+^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+cat &gt;/usr/local/mysql4/my_multi.cnf &lt;EOF
+[mysqld_multi]
+mysqld     = /usr/local/mysql4/bin/mysqld_safe
+mysqladmin = /usr/local/mysql4/bin/mysqladmin
+user       = root
+
+[mysqld1]
+socket     = /tmp/mysql_4_1.sock
+port       = 3301
+pid-file   = /usr/local/mysql4/data_1/hostname.pid
+datadir    = /usr/local/mysql4/data_1
+log        = /usr/local/mysql4/data_1/hostname.log
+user       = mysql
+
+[mysqld2]
+socket     = /tmp/mysql_4_2.sock
+port       = 3302
+pid-file   = /usr/local/mysql4/data_2/hostname.pid
+datadir    = /usr/local/mysql4/data_2
+log        = /usr/local/mysql4/data_2/hostname.log
+user       = mysql
+OEF
+=======================================================
+
+4.1.2. 启动mysql
+^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+pwd
+&gt;/usr/local/mysql4
+#启动mysqld2个实例 (GNR1和GNR2)
+bin/mysqld_multi --config-file=./my_multi.cnf start 1,2
+&gt;Starting mysqld daemon with databases from /usr/local/mysql4/data_1
+&gt;Starting mysqld daemon with databases from /usr/local/mysql4/data_2
+
+#查看端口是否被监听
+netstat -lt |grep 33
+&gt;tcp     0    0 *:3301      *:*       LISTEN
+&gt;tcp     0    0 *:3302      *:*       LISTEN
+=======================================================
+
+4.1.3. 测试mysql
+^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+pwd
+&gt;/usr/local/mysql4
+#通过mysql_4_1.sock连接3001端口的mysql(GNR1)
+bin/mysql -u root -S /tmp/mysql_4_1.sock -e "SELECT @@VERSION;"
+#停止3001端口的mysql(GNR1)
+bin/mysqld_multi  --config-file=./my_multi.cnf stop 1
+&gt;STOPPING server from pid file /usr/local/mysql4/data_1/hostname.pid
+&gt;050223 08:56:04  mysqld ended
+
+#再次连接(GNR4),系统会提示错误
+bin/mysql -u root -S /tmp/mysql_4_1.sock -e "SELECT @@VERSION;"
+&gt;ERROR 2002 (HY000):
+&gt;Can't connect to local MySQL server through socket '/tmp/mysql_4_1.sock' (2)
+
+#相同的步骤测试3002端口的mysql(GNR2)，输出与上相同
+bin/mysql -u root -S /tmp/mysql_4_2.sock -e "SELECT @@VERSION;"
+bin/mysqld_multi  --config-file=./my_multi.cnf stop 2
+bin/mysql -u root -S /tmp/mysql_4_2.sock -e "SELECT @@VERSION;"
+=======================================================
+
+4.2. 多版本单实例的实现
+^^^^^^^^^^^^^^^^^^^^^^^
+本目标利用启动多个 $MYSQL/bin/mysqld_safe 脚本实现
+
+4.2.1. 配置mysql
+^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+#在mysql4/data目录中添加配置文件my.cnf (也可以通过命令行参数实现)
+cat &gt;/usr/local/mysql4/data/my.cnf&lt;EOF
+[mysqld]
+socket          = /tmp/mysql_4_4.sock
+port            = 3304
+basedir         = /usr/local/mysql4
+default-character-set = gbk
+EOF
+#在mysql5/data目录中添加配置文件my.cnf (也可以通过命令行参数实现)
+cat &gt;/usr/local/mysql5/data/my.cnf&lt;EOF
+[mysqld]
+socket          = /tmp/mysql_5_5.sock
+port            = 3305
+basedir         = /usr/local/mysql5
+default-character-set = gbk
+EOF
+=======================================================
+
+4.2.2. 启动与测试
+^^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+#分别启动mysql4和mysql5
+
+cd /usr/local/mysql4
+bin/mysqld_safe --user=mysql --pid-file=data/hostname.pid --datadir=data &amp;
+cd /usr/local/mysql5
+bin/mysqld_safe --user=mysql --pid-file=data/hostname.pid --datadir=data &amp;
+
+#查看端口是否被监听
+netstat -lp|grep 33
+&gt;tcp     0    0 *:3304      *:*       LISTEN
+&gt;tcp     0    0 *:3305      *:*       LISTEN
+
+#查看mysql版本
+bin/mysql -u root -S /tmp/mysql_4_4.sock -e "SELECT @@VERSION;"
+bin/mysql -u root -S /tmp/mysql_5_5.sock -e "SELECT @@VERSION;"
+
+#检测mysql5
+bin/mysql -u root -S /tmp/mysql_5_5.sock
+
+#停止mysql
+bin/mysqladmin -u root -S /tmp/mysql_4_4.sock shutdown
+bin/mysqladmin -u root -S /tmp/mysql_5_5.sock shutdown
+=======================================================
+
+4.3. 多版本多实例的实现
+^^^^^^^^^^^^^^^^^^^^^^^
+
+利用启动多个 $MYSQL/bin/mysqld_multi 脚本实现，其方法同目标1
+
+4.3.1. 配置mysql
+^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+#仿造目标1方法，创建mysql5的配置
+cat &gt;/usr/local/mysql5/my_multi.cnf
+[mysqld_multi]
+mysqld     = /usr/local/mysql5/bin/mysqld_safe
+mysqladmin = /usr/local/mysql5/bin/mysqladmin
+user       = root
+
+[mysqld1]
+socket     = /tmp/mysql_5_8.sock
+port       = 3308
+pid-file   = /usr/local/mysql5/data_1/hostname.pid
+datadir    = /usr/local/mysql5/data_1
+log        = /usr/local/mysql5/data_1/hostname.log
+user       = mysql
+
+[mysqld2]
+socket     = /tmp/mysql_5_9.sock
+port       = 3309
+pid-file   = /usr/local/mysql5/data_2/hostname.pid
+datadir    = /usr/local/mysql5/data_2
+log        = /usr/local/mysql5/data_2/hostname.log
+user       = mysql
+EOF
+=======================================================
+
+4.3.2. 启动与测试
+^^^^^^^^^^^^^^^^^
+=============== tty : root@trydofor ===================
+cd /usr/local/mysql4
+bin/mysqld_multi --config-file=./my_multi.cnf start 1,2
+&gt;Starting mysqld daemon with databases from /usr/local/mysql4/data_1
+&gt;Starting mysqld daemon with databases from /usr/local/mysql4/data_2
+
+netstat -lt |grep 33
+&gt;tcp     0    0 *:3301      *:*       LISTEN
+&gt;tcp     0    0 *:3302      *:*       LISTEN
+&gt;tcp     0    0 *:3308      *:*       LISTEN
+&gt;tcp     0    0 *:3309      *:*       LISTEN
+
+
+bin/mysql -u root -S /tmp/mysql_4_1.sock -e "SELECT @@VERSION;"
+bin/mysql -u root -S /tmp/mysql_4_1.sock -e "SELECT @@VERSION;"
+bin/mysql -u root -S /tmp/mysql_5_8.sock -e "SELECT @@VERSION;"
+bin/mysql -u root -S /tmp/mysql_5_9.sock -e "SELECT @@VERSION;"
+
+bin/mysql -u root -S /tmp/mysql_5_8.sock
+=======================================================
+
+
+5. 常见问题
+^^^^^^^^^^^
+ *  系统环境变量的设定
+    很多linux发行版都把/usr/local/mysql加入了$PATH，同时/usr/bin/下
+    还有很多mysql命令和脚本。如果不注意，可能启动了错误版本的命令。
+    
+ *  $MYSQL/scripts/mysql_install_db 初始化不成功
+    这时要停掉系统中运行的mysqld，否则就要修改mysql_install_db
+    才能成功运行。---- 我是没有成功修改过:(
+    
+ *  $MYSQL/bin/mysqld_multi 启动多本版可能不正确
+    即，把msyql4和mysql5写在一个配置文件指定不同的中通过一个mysqld_multi启动。
+    [mysqld_multi]
+    user       = root
+    [mysqld4]
+    socket     = /tmp/mysql_4_4.sock
+    port       = 3304
+    pid-file   = /usr/local/mysql4/data/hostname.pid
+    datadir    = /usr/local/mysql4/data
+    log        = /usr/local/mysql4/data/hostname.log
+    user       = mysql
+    [mysqld5]
+    socket     = /tmp/mysql_5_5.sock
+    port       = 3305
+    pid-file   = /usr/local/mysql5/data/hostname.pid
+    datadir    = /usr/local/mysql5/data
+    log        = /usr/local/mysql5/data/hostname.log
+    user       = mysql
+    
+    当用mysql5中的mysqld_multi启动时，查看mysql版本都显示5的信息
+    使用4)中的语句测试，都不通过。原因尚在调查中...
+    
+ * 下面语句在mysql5上可以成功通过（主要是最后一句）
+    use test;
+    drop table if exists t3;
+    create table t3 (  userid bigint(20) not null default 0 );
+    drop procedure if exists bug8116;
+    create procedure bug8116(in _userid int)
+    select * from t3 where userid = _userid;
+    call bug8116(42);
+    
+ * /usr/local/mysql4/bin/mysqld_safe 的启动参数
+    --socket=/tmp/mysql_4_1.sock
+    --port=3301
+    --pid-file=/usr/local/mysql4/data_1/hostname.pid
+    --datadir=/usr/local/mysql4/data_1
+    --log=/usr/local/mysql4/data_1/hostname.log
+    --user=mysql
+   也可以cat /usr/local/mysql4/bin/mysqld_safe
+    
+ * /usr/local/mysql4/bin/mysqld_multi 的启动错误
+    WARNING! my_print_defaults command not found!
+    ....
+    FATAL ERROR: Tried to use mysqladmin in group [mysqld1],
+    but no mysqladmin binary was found.Please add "mysqladmin=..."
+    in group [mysqld_multi], or in group [mysqld1].
+    ....
+    
+    解决办法，#export PATH=$PATH:/usr/local/msyql4/bin
+    可以把高版本的path加入，也可以利用不同用户分别加入和启动。
+    如果使用mysqld_safe单独启动每个服务器，可以不加入PATH
+    
+ * 如果要深入研究mysql的启动，还是要好好理解一下他的启动脚本 :)
+    
+6. 参考资料
+^^^^^^^^^^^
+    * [[Using Option Files=&gt;http://dev.mysql.com/doc/mysql/en/option-files.html]]
+    * [[The mysqld_safe Server Startup Script=&gt;http://dev.mysql.com/doc/mysql/en/mysqld-safe.html]]
+    * [[The mysqld_multi Program for Managing Multiple MySQL Servers=&gt;http://dev.mysql.com/doc/mysql/en/mysqld-multi.html]]
+    * [[Running Multiple Servers on Unix=&gt;http://dev.mysql.com/doc/mysql/en/multiple-unix-servers.html]]
+    * [[MySQL Lists: internals: bk commit into 5.0 tree (pem:1.1857) BUG#8116=&gt;http://lists.mysql.com/internals/22163]]
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

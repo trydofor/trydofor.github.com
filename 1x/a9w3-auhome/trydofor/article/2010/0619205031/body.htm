@@ -1,0 +1,251 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+码工考古之DataSync
+^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2010-06-15
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. DataSync是啥玩意
+^^^^^^^^^^^^^^^^^^^
+DataSync 是一个小布丁点的工程，用来在两个数据库间倒扯数据。
+
+ * 纯JDBC，以PreparedStatement插数据，以SQL记log。
+ * 纯SQL同步，支持变量。
+ * 自动解决表间依赖关系。
+ * 可自定义字段生成规则。
+ * 不支持目标数据库的Update，只能Insert。
+ * 不能一次倒扯海量数据。
+ * java文件27个。
+ * 代码1827行，注释196行，空行358，共计2362行。
+ * 累积人力约1*8人时。
+
+原始需求是这样的：
+我们的高利贷系统，有近20*5个测试DB，经常要在两个DB间倒扯数据玩。
+但不幸的是DB的主键有自增的，有业务逻辑产生的；表关系复杂；表多。
+
+2. 蛇打七寸擒贼擒王
+^^^^^^^^^^^^^^^^^^^
+初步的需求分析和程序设计，集中在配置文件的定义上。
+工具是文本编辑器，两张打印纸加签字笔。电脑方便撤销与修改，笔纸则便于涂鸦。
+写了改，改了写的过程贯穿项目始终，美其名曰：持续重构 O(∩_∩)O。
+
+[![测试数据的ER图：]]
+[[&lt;=./data/erd.png]]
+
+一个自然人（PERSON，自增主键）对应一个顾客（CUSTOMER，业务主键），
+一个顾客对应多个债权（LOAN，业务主键），
+一个债权对应多个契约（CONTRACT，双主键，MAX+1）。
+各表有特殊用途的字段，如：LOGNO，CREATEDBY，CREATEDDT。
+
+[![程序配置文件：]]
+=========================== xml : 配置文件 ===========================
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;root&gt;
+  &lt;!-- 数据库配置 --&gt;
+  &lt;database&gt;
+    &lt;!-- 源数据库 --&gt;
+    &lt;source&gt;
+      &lt;driver&gt;com.ibm.db2.jcc.DB2Driver&lt;/driver&gt;
+      &lt;url&gt;jdbc:db2://10.4.9.52:50000/SEC0601&lt;/url&gt;
+      &lt;user&gt;db2inst1&lt;/user&gt;
+      &lt;pass&gt;LNjT4DRw&lt;/pass&gt;
+    &lt;/source&gt;
+    &lt;!-- 目标数据库 --&gt;
+    &lt;target&gt;
+      &lt;driver&gt;com.ibm.db2.jcc.DB2Driver&lt;/driver&gt;
+      &lt;url&gt;jdbc:db2://10.4.5.242:50000/PLX&lt;/url&gt;
+      &lt;user&gt;db2inst1&lt;/user&gt;
+      &lt;pass&gt;s1Iup3Dz&lt;/pass&gt;
+    &lt;/target&gt;
+  &lt;/database&gt;
+  &lt;!-- 全局变量 以 ${name}格式调用 --&gt;
+  &lt;parameters&gt;
+    &lt;!--
+        | type=text时，以字符串保持value值或value指向文件的全部内容。
+        | type=list时，以字符串列表保持value值或value指向文件的每一行。
+    --&gt;
+    &lt;para name="system.commit.debug" type="text" value="true"/&gt;
+    &lt;para name="system.target.delete" type="text" value="false"/&gt;
+    &lt;para name="system.target.existed" type="text" value="delete"/&gt;
+    &lt;para name="system.source.delete" type="text" value="false"/&gt;
+    &lt;!-- ./data/loanid.txt 文件一行一个债权，存到 loanids的List中 --&gt;
+    &lt;para name="loanids" type="list" value="./data/loanid.txt"/&gt;
+    &lt;para name="logno" type="text" value="9999"/&gt;
+  &lt;/parameters&gt;
+  &lt;!-- 操作对象（表） --&gt;
+  &lt;candidate&gt;
+    &lt;!-- 表的共通字段 --&gt;
+    &lt;common&gt;
+      &lt;!-- 使用变量 logno --&gt;
+      &lt;column name="LOGNO"         value="${logno}" /&gt;
+      &lt;!-- 使用固定值 9999 --&gt;
+      &lt;column name="CREATEDBY" value="9999" /&gt;
+      &lt;!-- 
+          | 可以是固定值 2010-05-05 05:05:05 也可是DB变量 CURRENT TIMESTAMP
+          | mutable 为true，该字段可变，不能作为where条件。默认为false。
+      --&gt;
+      &lt;column name="CREATEDDT" mutable="true" value="CURRENT TIMESTAMP" /&gt;
+    &lt;/common&gt;
+    &lt;tables&gt; &lt;!-- 表的集合 --&gt;
+      &lt;table name="LOAN"&gt; &lt;!-- 表名 LOAN --&gt;
+        &lt;!-- 该表在源数据库上抽取数据的SQL，使用全局变量 loanids --&gt;
+        &lt;source&gt;SELECT * FROM LOAN WHERE
+                LOANID IN (${loanids})
+        &lt;/source&gt;
+      &lt;/table&gt;
+      &lt;table name="CUSTOMER"&gt;
+        &lt;!-- 以源数据中LOAN表的CUSTID集合作为参数 --&gt;
+        &lt;source&gt;SELECT * FROM CUSTOMER WHERE 
+                CUSTID IN (${LOAN:CUSTID})
+        &lt;/source&gt;
+        &lt;target&gt;
+          &lt;!--
+              | 在目标数据库中，该表的指定字段如何设值
+              | 这里按源数据对应关系，设置成目标数据库中PERSON表的PERSONID值。
+          --&gt;
+          &lt;column name="PERSONID"  value="${PERSON:PERSONID}" /&gt;
+        &lt;/target&gt;
+      &lt;/table&gt;
+      &lt;table name="PERSON"&gt;
+        &lt;source&gt;SELECT * FROM PERSON WHERE 
+                PERSONID IN (${CUSTOMER:PERSONID})
+        &lt;/source&gt;
+      &lt;/table&gt;
+      &lt;table name="CONTRACT"&gt;
+        &lt;source&gt;SELECT * FROM CONTRACT WHERE 
+                LOANID IN (${LOAN:LOANID})
+        &lt;/source&gt;
+        &lt;target&gt;
+          &lt;!-- 在目标数据库中执行SQL，以返回值设置字段值 --&gt;
+          &lt;column name="CONTRACTSEQ"   clazz="SqlQuery" 
+              value="SELECT CASE WHEN  MAX(CONTRACTSEQ) IS NULL THEN 1 
+                     ELSE MAX(CONTRACTSEQ)+1 END FROM CONTRACT
+                     WHERE LOANID=${CONTRACT:LOANID}"
+          /&gt;
+        &lt;/target&gt;
+      &lt;/table&gt;
+    &lt;/tables&gt;
+  &lt;/candidate&gt;
+&lt;/root&gt;
+========================================================================
+
+3. 行而知之知而又行
+^^^^^^^^^^^^^^^^^^^
+编码中有几个兴趣点，稍稍驻足了一些时间，调研和拓展了不少知识。
+
+3.1. XML到类和类关系
+^^^^^^^^^^^^^^^^^^^^
+类和类关系，在编码，编译和测试时十分方便。
+xstream.alias("root", DataSyncConf.class);
+xstream.aliasField("parameters",DataSyncConf.class,"parameters");
+... ...
+xstream.alias("para", ParaConf.class);
+xstream.useAttributeFor(ParaConf.class,"name");
+... ...
+xstream.alias("candidate", CandidateConf.class);
+xstream.aliasField("common",CandidateConf.class, "common");
+
+3.2. 数据的依赖关系
+^^^^^^^^^^^^^^^^^^^
+数据依赖分两中情况：关系依赖和赋值依赖。
+
+关系依赖和DB表的逻辑关系一致，如，
+SELECT时是这样的：
+一条线是，${loanids}到LOAN到CUSTOMER到PERSON;
+另条线是，LOAN到CONTRACT。
+而INSERT时，一般是SELECT的反过程。
+
+赋值依赖，即一个字段的赋值方法，可能需要业务逻辑或变量生成。如，
+column name="LOGNO" value="${logno} 是变量。
+column name="LOANID" clazz="LoanIdMaker" 是业务逻辑。
+通常两者是结合使用的，如，
+column name="CONTRACTSEQ" clazz="SqlQuery" value="SELECT...${CONTRACT:LOANID}"
+
+3.3. 变量作用及性质
+^^^^^^^^^^^^^^^^^^^
+变量主要是用来表示和解决依赖的。运行时涉及四类变量。
+  1) 系统设置，定义程序行为。如：system.commit.debug
+  2) 程序参数，作为生产原料。如：loanids
+  3) 数据库结构(Schema)。如，表结构，表关系，字段类型。
+  4) 实时数据，是Schema的具体表现。包括源数据和目标数据。
+
+程序设计中，
+(1)和(2)放到全局变量中，以 ${name}表示，运行时为 ParaContext。
+(3)源DB结构，目标DB须与其一致。不可直接被变量引用。运行时为 DbContext。
+(4)实时数据，以${TABLE:COLUMN}表示，运行时为 DataContext。
+
+下面是变量的一个具体应用。
+"CONTRACT WHERE LOANID IN (${LOAN:LOANID})"
+这个SQL中有一个变量。解析时，重要信息有，
+ * 所属DB，是source还是target，视SQL所在位置而定。
+ * DB结构，是CONTRACT表LOANID字段。
+ * 取值范围，是LOAN表
+ * 取值标识，是LOANID，即LOAN表的LOANID字段。
+
+3.4. 字符串分析处理
+^^^^^^^^^^^^^^^^^^^
+简单的解析SQL。如，
+SELECT * FROM LOAN WHERE LOANID IN (${loanids})
+必须知道${loanids} 对应的类型是 LOAN表的LOANID字段。
+如果loanids是一组值，输出SQL时，是 '***'，'***'格式。
+
+识别变量格式。如，
+ 1) name="CREATEDDT" value="2010-05-05 05:05:05"
+ 2) name="CREATEDDT" mutable="true" value="CURRENT TIMESTAMP"
+在SQL表示中，1)输出为 '2010-05-05 05:05:05'，2)则是 CURRENT TIMESTAMP
+
+数据构造SQL。如，
+单引号转义，数字型直接输出，字符日期加单引号等。
+
+4. 走两步拉出来溜溜
+^^^^^^^^^^^^^^^^^^^
+程序设计为单线程，并且源数据全部载入后，才操作目标数据库。
+优点是，程序结构简单易懂，数据依赖处理方便灵活。缺点是吃内存。
+
+VMware上 java -server -Xmx512M -jar 执行测试数据，
+LOAN, columns:212, records:3000
+CUSTOMER, columns:109, records:2794
+RPERSON, columns:312, records:2794
+CONTRACT, columns:182, records:7089
+
+初始化DbContext耗时1.5秒，
+Select 15677 条源数据8秒，
+插入目标数据(DB2)用了30分钟，平均每秒8.7条。
+插入目标数据(MySql)用了8分钟，平均每秒32.7条。
+速度真慢，难道是没批量提交？
+
+程序是这样工作地，描述如下，(此图半天功，O(∩_∩)O)
+
+[[&lt;=./data/prc.png]]
+
+下面是应用中较为重要的几个类。
+TargetColumnSetter，用来实现如何对目标数据库字段赋值。
+SimplePara，默认setter。
+SqlQuery，执行SQL，使用结果赋值。
+
+SqlFormat，根据sqlType类型和Object类型构造SQL语句。
+VarParser，用来把字符串（主要是SQL）中的变量解析出来。
+SqlBuilder，是根据参数，构造 JDBC Statement用的。
+
+DataContext，按顺序存放源数据和目标数据。
+ParaContext，存放全局变量。
+DbContext，存放DB的表结构和关系；源DB和目标DB连接。
+
+[[&lt;=./data/clz.png]]
+
+5. 后续的反馈和补充
+^^^^^^^^^^^^^^^^^^^
+-- 2010-06-22 --
+阿福在哲思上回复，提到了 http://scriptella.javaforge.com/ 
+这个东西是我一直要找但没找到的东西。于是造了个轮子，享受了下过程。
+总体来讲，造轮子算重复劳动，尽管对当前需求讲，自己的东西用着舒坦。
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

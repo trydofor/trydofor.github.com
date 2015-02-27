@@ -1,0 +1,87 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+IPMSG on openSUSE-11.1
+^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-01-13
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 安装飞鸽
+^^^^^^^^^^
+下载最新版 g2ipmsg-0.9.6.tar.gz http://www.ipmsg.org/index.html.en
+
+=================== tty: make install =======================
+trydofor@linux-m6gc:~/Desktop&gt; cd /usr/local/src/
+trydofor@linux-m6gc:/usr/local/src&gt; tar -xzf g2ipmsg-0.9.6.tar.gz
+trydofor@linux-m6gc:/usr/local/src&gt; ll
+&gt;total 520
+&gt;drwxr-xr-x 8 trydofor users   4096 2009-01-13 13:55 g2ipmsg-0.9.6
+&gt;-rw-r--r-- 1 trydofor users 521263 2009-01-13 13:52 g2ipmsg-0.9.6.tar.gz
+trydofor@linux-m6gc:/usr/local/src&gt; cd g2ipmsg-0.9.6
+./configure --enable-systray --with-ext-charcode=UTF-8
+make
+sudo make insatll
+g2ipmsg
+&gt;
+&gt;(g2ipmsg:27370): GStreamer-WARNING **: Failed to load plugin 
+&gt;'/usr/lib/gstreamer-0.10/libgstcacasink.so': /usr/lib/gstreamer-0.10/
+&gt;libgstcacasink.so: undefined symbol: caca_dither_bitmap
+# 不影响使用,不用管这个警告.
+# 在桌面建立快速启动
+trydofor@linux-m6gc:~/Desktop&gt; cat IPMSG.desktop 
+&gt;[Desktop Entry]
+&gt;Version=1.0
+&gt;Encoding=UTF-8
+&gt;Name=IPMSG
+&gt;Type=Application
+&gt;Terminal=false
+&gt;Icon[en_US]=gnome-panel-launcher
+&gt;Name[en_US]=IPMSG
+&gt;Exec=/usr/local/bin/g2ipmsg
+&gt;Icon=/usr/local/share/pixmaps/ipmsg.png
+=============================================================
+
+2. 设置防火墙
+^^^^^^^^^^^^
+系统默认防火墙是打开的,所以启动Ipmsg后,窗口里没有用户,是被防火墙拦截的原因.
+Ipmsg的端口是 2425 TCP/UDP 在防火墙里允许其访问 ,
+Yast&gt;firewall&gt;AllowedServices&gt;Advanced..
+=========================== tty:iptables ======================
+linux-m6gc:~ # cat /etc/services |grep 2425
+&gt;fjitsuappmgr	2425/tcp   # Fujitsu App Manager
+&gt;fjitsuappmgr	2425/udp   # Fujitsu App Manager
+linux-m6gc:~ # iptables -L | grep fjitsuappmgr
+&gt;ACCEPT  tcp  --  anywhere     anywhere   tcp dpt:fjitsuappmgr 
+&gt;ACCEPT  udp  --  anywhere     anywhere   udp dpt:fjitsuappmgr 
+===============================================================
+这时,打开ipmsg,刷新用户列表,就可以看到用户了.
+
+3. 设置编码
+^^^^^^^^^^
+可能刷新ipmsg用户的时候,会出现n多以下错误
+.....................................
+FileName:userdb.c
+Function:fill_user_info_with_message
+Line:278
+Can not convert message from 10.4.5.98 
+into ineternal representation
+.....................................
+
+恭喜你,说明你的用户群里,有中文用户名,
+在g2ipmsg-0.9.5中,需要vi src/codeset.c 来搞定,即,
+#define IPMSG_PROTO_CODE IPMSG_EXTERNAL_CHARCODE
+改为
+#define IPMSG_PROTO_CODE “CP936”
+但在g2ipmsg-0.9.6中,不需要修改任何东西,作者已经做好了,
+我们要做的就是打开ipmsg窗口,在setting&gt;preferences&gt;
+External representation of IPMSG character code 
+里选择"CP936",然后"YES",再刷新用户列表,问题就搞定了.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

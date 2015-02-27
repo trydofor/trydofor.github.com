@@ -1,0 +1,193 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+SF上SCM从CVS到SVN的转换
+^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-03-13
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 事情的起因
+^^^^^^^^^^^^^
+2009-03-11 发现在eclipse下不能提交a9w3的变更到CVS了.
+经过半个多小时的调查和确认,最终只好请sf帮忙解决了.
+并且很快得到了sf的认真回复.(考虑到时差原因)
+
+========================= txt : CVS错误信息 =============================
+The server reported an error while performing the "cvs update" command.
+  a9w3: cvs update: failed to create lock directory for 
+  `/cvsroot/a9w3/a9w3/a9w3-engine' 
+  (/cvsroot/a9w3/a9w3/a9w3-engine/#cvs.lock): Read-only file system
+  a9w3: cvs update: failed to obtain dir lock in repository 
+  `/cvsroot/a9w3/a9w3/a9w3-engine'
+  a9w3: cvs [update aborted]: read lock failed - giving up
+=========================================================================
+
+======================= txt : 原来服务器Down了 ==========================
+CVS repositories that begin with the letters (a  e  h  i m o r w z) are 
+experiencing unplanned downtime since 2009-03-10 18:00 UTC.  
+SourceForge.net staff are actively working to resolve the issue and 
+anticipate having the service returned sometime in the next 2 days. 
+Questions or concerns may be directed to us by Support Request.
+=========================================================================
+
+11号,项目发布,很忙,很晚,没理会sf这事,等着回复吧.
+13号,发现sf可以提交了,但仅限于commit已有的文件,新增目录不好用.
+======================= txt : 不能新增目录 ==========================
+The server reported an error while performing the "cvs commit" command.
+  a9w3: cvs commit: failed to create lock directory for 
+  `/cvsroot/a9w3/a9w3-user/trydofor/article/2009/0310140935' 
+  (/cvsroot/a9w3/a9w3-user/trydofor/article/2009/0310140935/#cvs.lock): 
+  No such file or directory
+  a9w3: cvs commit: lock failed - giving up
+  a9w3: cvs [commit aborted]: lock failed - giving up
+=========================================================================
+
+然后认真读了sf的 "Support Requests item #2681120",还未完全恢复,
+建议使用其他SCM(Source Control Manager).
+
+======================= txt : 建议使用其他SCM ==========================
+CVS service has now been restored to all projects. Thank you for baring 
+with us. Again, we suggest you switch to an alternate SCM offering if 
+your project would prefer less downtime. We made all efforts to minimize 
+the downtime but limitations in CVS design keep us from making it as 
+resilient as the other 4 SCMs in our offering.
+=========================================================================
+
+一开始没注意 "other 4 SCMs" 一直以为只有cvs和svn呢,上去一看才知道,还有
+  * Bazaar, GPL的,Python写的,分散式的,Ubuntu这家公司资助的.
+  * Git, Linux内核开发用的,傻瓜内容跟踪器。Linus 是这样介绍Git的.
+  * Mercurial, Mozilla在使用Mercurial(hg),主体部分是用Python写的.
+真是孤陋寡闻了,最后决定使用比较流行的SVN吧,因为,
+  * svn比较熟,code.google也在用.
+  * eclipse和tortoise,这2个工具使用的挺顺手.
+  * sf上能直接把cvs的库导到svn去(没注意看其他SCM).
+
+最后,真的对sf的服务速度,质量,态度,打个"非常满意"的评价.
+我时常怀着一种感激之心,来读/用/写软件,当然用微软盗版,也在精神上感激了很多人 :D
+
+2. CVS 转 SVN
+^^^^^^^^^^^^^
+按照 sf 的以下手册,一步一步进行.
+http://apps.sourceforge.net/trac/sourceforge/wiki/Subversion%20import%20instructions
+============================== tty : putty ==============================
+# sf 的手册写的很好,使用putty需要登陆2次.
+# 第一次执行create,然后自动推出,第二次正常登陆,就可以使用 shell了.
+
+# 下载 cvs2svn http://cvs2svn.tigris.org
+wget http://cvs2svn.tigris.org/files/documents/1462/44372/cvs2svn-2.2.0.tar.gz
+tar -xzf cvs2svn-2.2.0.tar.gz
+mkdir cvsrepo
+ll
+&gt;lrwxrwxrwx  1 trydofor a9w3      31 Dec 12 09:32 a9text_htdocs -&gt; /home/groups/a/a9/a9text/htdocs
+&gt;lrwxrwxrwx  1 trydofor a9w3      29 Dec 12 09:30 a9w3_htdocs -&gt; /home/groups/a/a9/a9w3/htdocs
+&gt;drwxrwxr-x 11 trydofor a9w3    1024 Mar 13 05:40 cvs2svn-2.2.0
+&gt;-rw-rw-r--  1 trydofor a9w3  411531 Nov 23 08:15 cvs2svn-2.2.0.tar.gz
+&gt;drwxrwxr-x  2 trydofor a9w3      80 Mar 13 05:41 cvsrepo
+&gt;lrwxrwxrwx  1 trydofor users     23 Sep 30 20:32 olft -&gt; /home/groups/o/ol/olft/
+&gt;lrwxrwxrwx  1 root     root      31 Oct 24 01:43 uploads -&gt; /incoming/t/tr/trydofor/uploads
+&gt;lrwxrwxrwx  1 root     root      27 Oct 24 02:07 userweb -&gt; /home/userweb/t/tr/trydofor
+
+#获得CVS的副本.
+cd cvsrepo
+rsync -av rsync://a9w3.cvs.sourceforge.net/cvsroot/a9w3/* a9w3
+rsync -av rsync://a9text.cvs.sourceforge.net/cvsroot/a9text/* a9text
+ll
+&gt;total 8
+&gt;drwxrwxr-x 4 trydofor a9w3   80 Mar 13 05:58 a9text
+&gt;drwxrwxr-x 5 trydofor a9w3 1024 Mar 13 05:49 a9w3
+
+#转换成svndump
+cd a9w3
+ ~/cvs2svn-2.2.0/cvs2svn --dumpfile=svndump .
+# 没有错误信息,截取最后一段
+&gt;Timings (seconds):
+&gt;------------------
+&gt;16.03   pass1    CollectRevsPass
+&gt; 0.04   pass2    CleanMetadataPass
+&gt; 0.02   pass3    CollateSymbolsPass
+&gt; 0.75   pass4    FilterSymbolsPass
+&gt; 0.10   pass5    SortRevisionSummaryPass
+&gt; 0.02   pass6    SortSymbolSummaryPass
+&gt; 0.41   pass7    InitializeChangesetsPass
+&gt; 1.56   pass8    BreakRevisionChangesetCyclesPass
+&gt; 0.27   pass9    RevisionTopologicalSortPass
+&gt; 0.09   pass10   BreakSymbolChangesetCyclesPass
+&gt; 0.29   pass11   BreakAllChangesetCyclesPass
+&gt; 0.23   pass12   TopologicalSortPass
+&gt; 0.80   pass13   CreateRevsPass
+&gt; 0.02   pass14   SortSymbolsPass
+&gt; 0.02   pass15   IndexSymbolsPass
+&gt;21.95   pass16   OutputPass
+&gt;42.59   total
+ll
+&gt;total 21712
+&gt;dr-xrwsr-x 3 trydofor a9w3     2048 Feb 11 12:56 CVSROOT
+&gt;dr-xrwsr-x 6 trydofor a9w3     1024 Mar 13 00:52 a9w3
+&gt;dr-xrwsr-x 3 trydofor a9w3       80 Dec 12 12:16 a9w3-user
+&gt;-rw-rw-r-- 1 trydofor a9w3 22186298 Mar 13 06:07 svndump
+
+#通过sftp上传
+sftp trydofor@frs.sf.net
+&gt;Connecting to frs.sf.net...
+&gt;trydofor@frs.sf.net's password:
+sftp&gt; cd  uploads
+sftp&gt; put svndump
+&gt;Uploading svndump to /incoming/t/tr/trydofor/uploads/svndump
+&gt;svndump                            100%   21MB   7.1MB/s   00:03
+sftp&gt; exit
+=========================================================================
+登陆sf,或使用下面URL,使用web的功能来完成替换的操作.
+https://sourceforge.net/project/admin/svn_migration.php
+
+注意,选择'replace','Destination' 保持空白.
+在手册中有对为什么这么设定的说明.
+
+提交之后出现下面这个消息,实际上没那么恐怖,很快.
+.........................................................................
+Your request for migration has been registered. 
+Migration will take 1-3 hours, depending on the size of your repository, 
+and the size of the queue in front of you. 
+If it still hasn't been created in 24 hours, 
+please file a Support Request.
+.........................................................................
+
+不时的 'Refresh'一下,看看状态.
+
+.........................................................................
+Last request for migration is:
+Requested by:       trydoforProject Admin
+Requested on:       2009-03-13 14:57
+Source data type:   SVN dump file archive
+Source file:        svndump
+Destination:        
+Replacement:        Yes
+Current status:     COMPLETE
+
+Tries:
+Start                  End                    Status
+2009-03-13 14:58       2009-03-13 15:04       COMPLETE 
+.........................................................................
+
+成功之后,通过网页和tortoise可以访问了
+http://a9w3.svn.sourceforge.net/viewvc/a9w3/trunk/a9w3/
+
+待 a9w3 完毕之后,开始对付 a9text
+唯一的问题是,a9text中出现了非 UTF8的编码,在cvs2svn是报错.
+按照提示,增加参数 '--fallback-encoding=GBK'
+~/cvs2svn-2.2.0/cvs2svn --fallback-encoding=GBK  --dumpfile=svndump .
+一切顺利 :D
+
+不过,唯一不爽的是,trunk有个的 'CVSROOT/',比较不伦不类.
+哎,没有办法,SVN不能彻底删除这个目录,而CVS上可以,忍忍吧.
+
+如果早调查一下,就不转成SVN了,万一那天手发抖,提交了个X档案,
+还无法删除,多闹心啊.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

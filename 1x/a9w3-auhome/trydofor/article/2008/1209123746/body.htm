@@ -1,0 +1,168 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+FCRON 试用手记
+^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2005-03-13
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 内容摘要
+^^^^^^^^^^^
+Fcron是一款调度程序，目的是取替Vixie Cron。
+这里主要是对Fcron的使用进行提炼，并记录使用过程中的一些事情。
+
+2. 软件安装
+^^^^^^^^^^^
+官方网站: http://fcron.free.fr
+目前( Mar 12 2005 )稳定版本有两个：
+ * 稳定版: 2.0.2
+ * 开发版: 2.9.6
+其中，2.9.6中，有个fcrondyn命令，可以方便和守护进程对话。
+这两个版之外的，还有几个安全漏洞，慎用:)
+
+============== tty : root@trydofor ==============
+tar -xzf fcron-2.9.5.1.src.tar.gz
+cd fcon*
+./configure
+make
+make install
+#之后都选 yes,顺利成功。
+================================================
+
+3. 调度配置
+^^^^^^^^^^^
+fcron的配置文件格式很灵活，基本格式为：
+options frequency command
+可以分别以@,&amp;,%,!作为行的开始，来表明调度书写的方式。
+
+========================== txt : sample ==============================
+1. Entries based on elapsed system up time
+----------------------------------------------------------------------
+@options frequency command
+----------------------------------------------------------------------
+        months (4 weeks)    :  m
+        weeks (7 days)      :  w
+        days (24 hours)     :  d
+        hours (60 minutes)  :  h
+        seconds             :  s
+----------------------------------------------------------------------
+# Get our mails every 30 minutes
+@ 30 getmails -all
+# make some security tests every 48 hours of system up time,
+# force a mail to be sent to root even if there is no output
+@mailto(root),forcemail 2d /etc/security/msec/cron-sh/security.sh
+----------------------------------------------------------------------
+
+2. Entries based on time and date
+----------------------------------------------------------------------
+&amp;options min hrs day-of-month month day-of-week command
+----------------------------------------------------------------------
+        minute          :  0-59
+        hour            :  0-23
+        day of month    :  1-31
+        month           :  1-12 (or names, see below)
+        day of week     :  0-7  (0 and 7 are both Sunday, or names)
+
+a[-b[/c][~d][~e][...]][,f[-g[/h][~i][~j][...]]][,...]
+-: to
+/: every
+~: not
+,: and
+*: all
+----------------------------------------------------------------------
+# run mycommand at 12:05, 12:35, 13:05, 13:35,
+# 14:05 *and* 14:35 everyday
+&amp;05,35 12-14 * * * mycommand -u me -o file
+
+# get mails every hour past 20, 21, 22, and 24 minutes.
+20-24~23 * * * * getmail
+
+# save our work of the day every night at 03:45 with a low priority
+# unless we are sunday, mail the output to jim and run that job
+# at startup if computer was down at 03:45
+&amp;nice(10),mailto(jim),bootrun 45 03 * * *~0 "save --our work"
+----------------------------------------------------------------------
+
+3. Entries run periodically
+----------------------------------------------------------------------
+%options min hrs day-of-month month day-of-week command
+----------------------------------------------------------------------
+        Keywords                   :  must be followed by the fields
+        hourly, midhourly          :  minutes.
+        daily, middaily, nightly,
+               weekly, midweekly   :  minutes and hours.
+        monthly, midmonthly        :  minutes, hours and days.
+----------------------------------------------------------------------
+
+4. option declaration
+!reset,serial(true),dayor,bootrun(0),mailto(root),lavg(.5,2,1.5)
+======================================================================
+
+5. 几点总结
+^^^^^^^^^^^
+对调度的启用，可以使用service fcron start 和 fcron -f 两种基本方法。
+当启动fcron后，就可以使用fcrondyn与进程会话（但，会话内容很简单）。
+
+fcron的功能真的很强大，可以指定output的方式，还有很多参数能够设置
+
+值得注意的一点是，进行如下测试的时候，出现了问题：
+
+======================= java : TestThread.java==================
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class TestThread extends Thread
+{
+    public void run(){
+        BufferedReader mReader = new BufferedReader
+                                (
+                                 new InputStreamReader(System.in)
+                                );
+        while(true){
+             try
+            {
+                System.out.print("input :");
+                System.out.println("output:"+mReader.readLine());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        TestThread t = new TestThread();
+        t.start();
+    }
+}
+===============================================================
+==================== tty : root@trydofor ======================
+fcrontab -l
+&gt;11:58:24 listing root's fcrontab
+&gt;#   m h d m w cmd
+&gt;&amp;stdout(true) 00 * * * * '/usr/local/j2sdk/bin/java -jar /root/test.jar'
+
+fcron -f
+&gt;input :output:null
+&gt;... ... ... //loop forever
+# 死循环了
+
+===============================================================
+
+对于要求控制台输入的程序，要小心：）
+目前没有调查出原因也没有解决办法得到控制台输入。
+
+多么希望有一款调度程序可以获得守护进程的输入和输出阿
+（不过，从守护进程的定义上看，是很难实现了）
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -1,0 +1,93 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+iptables 梁山好汉
+^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2008-12-09
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 午夜凶铃
+^^^^^^^^^^^
+通常,对重要资源公司都有一套成文的规定,并会进行严格的授权.
+当然,我们也不例外,在硬件上授权于MAC地址和网段.
+安全体系的确避免了不少隐患,但同时也让便捷性折了几扣.
+
+午夜凶铃曾是我最大的噩梦.
+酣梦中被运营电话惊醒 ---- 正式服务器出现状况,
+需要30分钟内对应.
+
+怎么办?必须到公司!必须要授权! ---- 但还没睁开眼睛...
+
+2. 逼上梁山
+^^^^^^^^^^^
+公司提供了VPN,不过拨入的账户在一个隔离的网段.
+需要跳板,但还要保证安全,还不能太复杂.
+
+===================== bash :openjp.sh ============================
+#!/bin/bash
+
+#check lock
+LOCKFILE=.lock
+if [ -f $LOCKFILE ]; then
+   echo "maybe it is opening, or rm $LOCKFILE"
+   exit
+fi
+# set port forward
+echo "1"&gt;/proc/sys/net/ipv4/ip_forward
+/sbin/iptables -F -t nat
+/sbin/iptables -F INPUT
+/sbin/iptables -t nat -A POSTROUTING -j MASQUERADE
+#
+/sbin/iptables -t nat -A PREROUTING -p tcp -m tcp --dport 55000 -j \
+ DNAT --to-destination 10.0.172.210:50000
+/sbin/iptables -t nat -A PREROUTING -p tcp -m tcp --dport 55001 -j \
+DNAT --to-destination 10.0.170.209:50000
+/sbin/iptables -t nat -A PREROUTING -p tcp -m tcp --dport 55003 -j \
+DNAT --to-destination 10.0.172.232:50000
+
+# lock status
+touch $LOCKFILE
+==================================================================
+
+===================== bash :denyjp.sh ============================
+#!/bin/bash
+
+# check lock
+LOCKFILE=.lock
+if [ -f $LOCKFILE ]; then
+   rm -f $LOCKFILE
+fi
+
+echo "0"&gt;/proc/sys/net/ipv4/ip_forward
+/sbin/iptables -F -t nat
+/sbin/iptables -F INPUT
+/sbin/iptables -A INPUT -j REJECT -s 10.0.172.0/24
+/sbin/iptables -A INPUT -j REJECT -s 10.0.170.0/24
+==================================================================
+
+3. 安全举措
+^^^^^^^^^^^
+开了后门,自然舒坦,但安全举措那是必不可少.
+大概做了这么基本几条.
+ * root 不让远程登陆.
+ * openjp.sh,denyjp.sh 改成 100 root:root.
+ * 操作者使用sudo 进行open,结束后deny.
+ * 操作者密码足够复杂.
+ * 不告诉任何无关的人.
+
+4. 走漏风声
+^^^^^^^^^^^
+一次偶然的突发事件,客户自己要在十万火急的情况下快速解决问题.
+于是,就把秘诀传授给了他们,并告知这个是保密的.
+问题得以及时解决,客户很是满意.
+
+再后来,系统的网络结构更加复杂,出现的需要也越来越多,
+前不久,还把iptables请到幕前,名正言顺的做起了转发.
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

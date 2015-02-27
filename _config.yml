@@ -2,11 +2,10 @@
 
 # Site wide configuration
 
-title: 臭豆腐 
+title: "臭豆腐 trydofor: program keywords"
 description: "$implicity is everything, since valentine's day 2004."
-logo: logo/120x120-moilion.png
-teaser: logo/400x250-skill.png
-url: http://local.trydofor.com:4000
+url: http://www.trydofor.com
+#url: http://local.trydofor.com:4000
 
 # Jekyll configuration
 

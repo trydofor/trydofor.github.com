@@ -1,0 +1,146 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+实践Log4j按级别分类输出
+^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2005-02-24
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 实现目标
+^^^^^^^^^^^
+不同的log级别,输出给不同的appender
+比如,DEBUG显示在控制台,其他输出到FILE
+
+2. 实现机理
+^^^^^^^^^^^
+这里使用xml格式的配置文件，重点就是在appender 节点中加入 filter 。
+
+======================== dtd : log4j.dtd ======================
+&lt;!ELEMENT appender
+    (errorHandler?,param*,layout?,filter*,appender-ref*)
+&gt;
+... ...
+&lt;!ELEMENT filter (param*)&gt;
+&lt;!ATTLIST filter class      CDATA   #REQUIRED &gt;
+... ...
+&lt;!ELEMENT param EMPTY&gt;
+&lt;!ATTLIST param
+  name      CDATA   #REQUIRED
+  value     CDATA   #REQUIRED
+&gt;
+===============================================================
+
+======================== txt : log4j api ======================
+org.apache.log4j.spi
+Class Filter
+java.lang.Object
+  +--org.apache.log4j.spi.Filter
+All Implemented Interfaces:
+  OptionHandler
+Direct Known Subclasses:
+  DenyAllFilter, LevelMatchFilter, LevelRangeFilter, StringMatchFilter
+
+LevelMatchFilter
+    void setAcceptOnMatch(boolean acceptOnMatch)
+    void setLevelToMatch(String level)
+LevelRangeFilter
+    void setAcceptOnMatch(boolean acceptOnMatch)
+    void setLevelMax(Level levelMax)
+    void setLevelMin(Level levelMin)
+===============================================================
+
+3) log4j 的xml配置文件中对filter的设置，应分别如下格式：
+======================== xml : log4j config ======================
+    &lt;filter class="org.apache.log4j.varia.LevelMatchFilter"&gt;
+        &lt;param name="levelToMatch" value="ERROR"/&gt;
+        &lt;param name="acceptOnMatch" value="true"/&gt;
+    &lt;/filter&gt;
+
+    &lt;filter class="org.apache.log4j.varia.LevelRangeFilter"&gt;
+        &lt;param name="levelMin" value="ERROR"/&gt;
+        &lt;param name="levelMax" value="FATAL"/&gt;
+        &lt;param name="acceptOnMatch" value="true"/&gt;
+    &lt;/filter&gt;
+===============================================================
+
+3. 功能测试
+^^^^^^^^^^^
+============= java: com.trydofor.log4j.test.MultiOutput.java =============
+package com.trydofor.log4j.test;
+
+import java.net.URL;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+public class MultiOutput
+{
+    static Logger logger = Logger.getLogger(MultiOutput.class);
+
+    public static void main(String[] args)
+    {
+        URL url = MultiOutput.class.getResource("log4j.xml");
+        DOMConfigurator.configure(url);
+        logger.error("error");
+        logger.fatal("fatal");
+        logger.warn("warn");
+        logger.info("info");
+    }
+}
+===============================================================
+
+======================== xml: log4j.xml ========================
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE log4j:configuration SYSTEM "log4j.dtd"&gt;
+
+&lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"&gt;
+  &lt;appender name="console" class="org.apache.log4j.ConsoleAppender"&gt;
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+      &lt;param name="ConversionPattern"
+        value="%d %-6p [%t - %F:%L - %c{1}] %m%n" /&gt;
+    &lt;/layout&gt;
+    &lt;filter class="org.apache.log4j.varia.LevelRangeFilter"&gt;
+       &lt;param name="levelMin" value="ERROR" /&gt;
+       &lt;!--param name="levelMax" value="FATAL" /--&gt;
+       &lt;param name="AcceptOnMatch" value="true" /&gt;
+    &lt;/filter&gt;
+  &lt;/appender&gt;
+
+  &lt;appender name="file" class="org.apache.log4j.RollingFileAppender"&gt;
+    &lt;param name="File" value="log/cafis.log" /&gt;
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+      &lt;param name="ConversionPattern"
+        value="%d %-6p [%t - %F:%L - %c{1}] %m%n"/&gt;
+    &lt;/layout&gt;
+  &lt;/appender&gt;
+  &lt;root&gt;
+    &lt;level value="WARN"/&gt;
+    &lt;appender-ref ref="console"/&gt;
+    &lt;appender-ref ref="file"/&gt;
+  &lt;/root&gt;
+&lt;/log4j:configuration&gt;
+===============================================================
+
+输出结果
+............................................................
+CONCOLE：
+2005-02-24 19:49:29,500 ERROR  ... ... error
+2005-02-24 19:49:29,515 FATAL  ... ... fatal
+
+FILE：
+2005-02-24 19:49:29,500 ERROR  ... ... error
+2005-02-24 19:49:29,515 FATAL  ... ... fatal
+2005-02-24 19:49:29,515 WARN   ... ... warn
+........................................................
+
+4. 参考资料
+^^^^^^^^^^^
+  * [[log4j version #.#.# API Specification=&gt;http://logging.apache.org/log4j/docs/api/index.html]]
+  * jakarta-log4j-1.2.8/src/java/org/apache/log4j/xml/log4j.dtd
+  * jakarta-log4j-1.2.8/src/java/org/apache/log4j/xml/examples/*.xml
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

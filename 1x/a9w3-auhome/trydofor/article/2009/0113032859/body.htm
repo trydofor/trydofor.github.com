@@ -1,0 +1,173 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+﻿openSUSE-11.1 on TP SL500
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-01-12
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 安装环境
+^^^^^^^^^^
+安装光盘,从官方下载 openSUSE-11.1-DVD-i586.iso 烧成光盘.
+
+硬件环境,Thinkpad SL500 27469DC
+CPU: Intel(R)Core(TM)2 Duo T5670  @1.80GHz
+MEM: 2G
+显卡: nVidia GeForce 9300M GS/256M
+硬盘: SATA 160G 5400rpm
+网卡: Realtek RTL8111C
+
+现有windows,安装后为Grub双引导,
+安装后分区情况
+=========================== tty:partition ==========================
+linux-m6gc:~ # fdisk -l
+&gt;
+&gt;Disk /dev/sda: 160.0 GB, 160041885696 bytes
+&gt;255 heads, 63 sectors/track, 19457 cylinders
+&gt;Units = cylinders of 16065 * 512 = 8225280 bytes
+&gt;Disk identifier: 0x38e7a62b
+&gt;
+&gt;   Device Boot      Start         End      Blocks   Id  System
+&gt;/dev/sda1               1        1912    15358108+   7  HPFS/NTFS (*C)
+&gt;/dev/sda2   *        1913       19457   140930212+   f  W95 Ext'd (LBA)
+&gt;/dev/sda5            1913        7011    40957686    7  HPFS/NTFS (*D)
+&gt;/dev/sda6            7012       12110    40957686    7  HPFS/NTFS (*E)
+&gt;/dev/sda7           12111       17209    40957686    7  HPFS/NTFS (*F)
+&gt;/dev/sda8           17210       17218       72261   83  Linux
+&gt;/dev/sda9           17219       19457    17984736   8e  Linux LVM
+====================================================================
+
+2. 分区设置
+^^^^^^^^^^
+安装前,用PQ预留2个分区,
+sda8 72M EXT3作为/boot,
+sda9 17G LVM.
+安装过程中,遇到一个奇诡的问题,使用LVM自动分区形式,[![会丢失2G的空间]],即
+sda9 15G,然后在其后,剩余2G的未分区空间.
+最后只好采用专家模式,手动调整LVM分区,格式如下,
+============================== tty:lvm =============================
+linux-m6gc:~ # pvs
+&gt;  PV         VG     Fmt  Attr PSize  PFree
+&gt;  /dev/sda9  system lvm2 a-   17.15G 8.00M
+linux-m6gc:~ # lvs
+&gt;  LV   VG     Attr   LSize Origin Snap%  Move Log Copy%  Convert
+&gt;  home system -wi-ao 7.00G                                      
+&gt;  root system -wi-ao 8.14G                                      
+&gt;  swap system -wi-ao 2.00G   
+linux-m6gc:~ # df -lh
+&gt;Filesystem            Size  Used Avail Use% Mounted on
+&gt;/dev/mapper/system-root
+&gt;                      8.1G  6.5G  1.2G  85% /
+&gt;udev                 1001M  272K 1001M   1% /dev
+&gt;/dev/sda8              69M   20M   46M  30% /boot
+&gt;/dev/mapper/system-home
+&gt;                      6.9G  254M  6.3G   4% /home
+&gt;/dev/sda1              15G  8.2G  6.5G  56% /windows/C
+&gt;/dev/sda5              40G  4.5G   35G  12% /windows/D
+&gt;/dev/sda6              40G  7.4G   32G  19% /windows/E
+&gt;/dev/sda7              40G   22G   18G  56% /windows/F
+====================================================================
+
+3. 硬盘杀手
+^^^^^^^^^^
+只有笔记本才有这种情况,是之前的bug,叫load/unload cycle,可以google详细内容.
+大概意思是,为了省电,硬盘休息,进行磁头复位,夜深人静的话,能听到"咔嗒"的响声,
+慢的话大概每分钟4次,快的话上十次.据说复位计数到了600,000次,硬盘就可以报废了.
+而window是怎么做的呢?好像是什么也没做,所以linux有点多虑了.
+据说,有些发行版在以后将不区分desktop和laptop版本了,无为很好,所以我就无为了.
+
+如何查看呢?(opensuse上默认安装了smartctl)
+======================= tty:smartctl ================================
+linux-m6gc:~ # while true; do smartctl -a /dev/sda|grep 193; sleep 10; done
+&gt;193 Load_Cycle_Count 0x001a 098 098  000  Old_age Always -  5604
+&gt;193 Load_Cycle_Count 0x001a 098 098  000  Old_age Always -  5605
+&gt;193 Load_Cycle_Count 0x001a 098 098  000  Old_age Always -  5607
+&gt;^C
+=====================================================================
+所以,为了保护硬盘,第一件事,就应该是处理这个LCC(Load Cycle Count)的问题.
+======================= tty:hdparm ==================================
+#关闭磁盘的这个高级电源管理功能,并随机器自动启动
+linux-m6gc:~ # echo "hdparm -q -B 255 -q -S 0 /dev/sda" &gt;&gt; /etc/init.d/boot.local
+#执行一下这个命令,同时检查脚步是否正确.
+. /etc/init.d/boot.local
+#然后在执行samrtctl命令观测一段时间,看看效果.
+=====================================================================
+
+4. 液晶亮度
+^^^^^^^^^^
+情况是这样的,开机到登录前,屏幕亮度很高,登录之后屏幕会一下变暗,并一直暗着.
+这个问题也是laptop特有的,为了省电,即便使用电源也有这样的情况.
+解决办法就是在电源管理中把亮度设置大一些就可以了.
+GNOME&gt;Computer&gt;ControlCenter&gt;PowerManagement&gt;SetDisplayBrightness...
+
+5. 磁盘读写
+^^^^^^^^^^
+双系统,需要对NTFS进行自由读写,安装时默认了root只读,因此需要修改下fstab
+============================ tty:fstab ================================
+linux-m6gc:~ # cat /etc/fstab
+&gt;/dev/system/swap     swap                 swap       defaults              0 0
+&gt;/dev/system/root     /                    ext3       acl,user_xattr        1 1
+&gt;/dev/system/home     /home                ext3       acl,user_xattr        1 2
+&gt;/dev/disk/by-id/ata-ST9160827AS_5RF2KXT4-part1 /windows/C           
+&gt;    ntfs-3g    users,gid=users,fmask=113,dmask=022,locale=en_US.UTF-8 0 0
+&gt;/dev/disk/by-id/ata-ST9160827AS_5RF2KXT4-part5 /windows/D           
+&gt;    ntfs-3g    user,users,gid=users,fmask=113,dmask=002,locale=en_US.UTF-8 0 0
+=======================================================================
+这里是C盘只读,D,E,F,user可写(省略了E,F,和D一样).
+参考 http://en.opensuse.org/NTFS
+注意::
+   默认安装是 fmask=133 是不对的,应该是113,所以需要全改一遍.
+   然后对可写磁盘,修改成 D 盘的样子,增加了"user,",修改"dmask=022"为 "dmask=002"即可.
+   locale使用UTF-8,中文没有乱码.
+
+6. 中文美化
+^^^^^^^^^^
+openSUSE已经很美化了,如果安装中只选择中文支持,并且登录用户也使用中文,那么可以不用美化了.
+输入法是SCIM,感觉很不错.
+但是如果安装中选择中日韩支持,登录用户使用英文的话,字体可能有点乱,多少发虚或出现方块等.
+如果出现这样的情况,就选择宋体吧,我比较喜欢,雅黑也行,但没看习惯.
+
+关于字体设置这块有很多现成的东西,但本人建议安装之前先了解 FontConf GTK1,GTK2,QT的知识.
+知其然也要知其所以然,否则字体装乱了,可就毫无美感了.
+
+7. 桌面效果
+^^^^^^^^^^
+openSUSE11.1的最抢眼的一个特征,之所以我从ubuntu过来,这个占了很大成分,绿色还是很享受的.
+(暂离ubuntu的主要原因是,无线网络死活连不上,在家不能上网,openSUSE11.1的能上)
+
+特效的前提要装显卡驱动,否则白屏,方法见http://en.opensuse.org/NVIDIA
+然后就可以开启桌面特效了,以下方法任选其一即可,
+ * 图形界面中,ControlCenter&gt;DesktopEffects
+ * 命令行执行 simple-ccsm
+
+在GNOME下没有问题,但是一旦运行KDE程序或使用KDE桌面,就会出现以下症状.
+ * 窗口没标题栏(即,没有最大化,最小化,关闭按钮,窗口不能移动)
+ * 无法双击标题栏进行最大化
+ * 特效全开,会死机(键盘无响应,无法切换控制台,只能按电源重启,或远程ssh登录,进行kill)
+上面的问题,是因为compiz的问题,需要升级.
+
+参考 http://dev.compiz-fusion.org/~cyberorg/2008/12/04/compiz-on-opensuse-111/
+
+================================= tty : compiz =================================
+#添加源
+linux-m6gc:~ # zypper ar \
+http://download.opensuse.org/repositories/X11:/XGL/openSUSE_11.1/ X11:XGL
+#更新
+linux-m6gc:~ # zypper up -t package -r X11:XGL
+#接下来,就是下载并安装了,输入几个yes和回车
+#然后手动关闭桌面特效(DesktopEffects)
+#删除compiz配置
+linux-m6gc:~ # rm -rf ~trydofor/.config/compiz
+linux-m6gc:~ # rm -rf /root/.config/compiz
+#重新手动开启桌面特效
+================================================================================
+经过升级后的compiz桌面特效,可以开到最大,而不会出现什么问题.
+本文就是在openSUSE11.1 GNOME 桌面特效最大化完成的,输入法窗口飞来飞去的,挺酷 :D
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

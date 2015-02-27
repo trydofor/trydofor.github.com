@@ -1,0 +1,150 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style type='text/css'>
+input{width:60px;}
+</style>
+<input type="text" value="框颜色" disabled />
+<input id="STAGEBG" type="text" value="#000000" />
+<input type="text" value="石颜色" disabled />
+<input id="STONEBG" type="text" value="#FFFFFF" />
+<input type="text" value="马颜色" disabled />
+<input id="HORSEBG" type="text" value="#000000" />
+<br/>
+<input type="text" value="左空白" disabled />
+<input id="XOFFSET" type="text" value="100" />
+<input type="text" value="顶空白" disabled />
+<input id="YOFFSET" type="text" value="200" />
+<br/>
+<input type="text" value="线粗细" disabled />
+<input id="LINESIZ" type="text" value="1" />
+<br/>
+<input type="text" value="单元宽" disabled />
+<input id="CELLWDT" type="text" value="15" />
+<input type="text" value="单元高" disabled />
+<input id="CELLHGT" type="text" value="31" />
+<input name="SWITCH" type="radio" value="cell" checked onclick="switchInput(this)"/>
+<br/>
+<input type="text" value="总宽" disabled />
+<input id="LOGOWDT" type="text" value="0" disabled />
+<input type="text" value="总高" disabled />
+<input id="LOGOHGT" type="text" value="0" disabled />
+<input name="SWITCH" type="radio" value="logo" onclick="switchInput(this)"/>
+
+<br/>
+<input type="button" style="background-color:#4169E1" onclick="drawMargorpLogo()" value="生成" />
+<input type="button" style="background-color:#9ACD32" onclick="window.open('http://margorp.googlecode.com/svn/trunk/margorp/logo/logo-howto.png')" value="如何做" />
+<input type="button" style="background-color:#9ACD32" onclick="window.open('http://www.margorp.org')" value="码工魄" />
+<input type="button" style="background-color:#9ACD32" onclick="window.open('http://www.trydofor.com')" value="臭豆腐" />
+
+<script>
+var stagebg = "#000000";
+var stonebg = "#FFFFFF";
+var horsebg = "#000000";
+var xoffset = 100;
+var yoffset = 200;
+var linesiz = 1;
+var cellwdt = 15;
+var cellhgt = 31;
+var logowdt = 6*(linesiz+cellwdt);
+var logohgt = 3*(linesiz+cellhgt);
+
+function drawMargorpLogo(){
+    __initPara();
+    __calcSize();
+    __drawStage();
+    __drawStone();
+    __drawHorse();
+}
+
+function switchInput(obj){
+    var iscell = obj.value=="cell";
+    var islogo = obj.value=="logo";
+    document.getElementById("CELLWDT").disabled=islogo;
+    document.getElementById("CELLHGT").disabled=islogo;
+    document.getElementById("LOGOWDT").disabled=iscell;
+    document.getElementById("LOGOHGT").disabled=iscell;
+}
+
+function __initPara(){
+    stagebg = __getInputValue("STAGEBG","#000000");
+    stonebg = __getInputValue("STONEBG","#FFFFFF");
+    horsebg = __getInputValue("HORSEBG","#000000");
+    xoffset = __getInputValue("XOFFSET",100)*1;
+    yoffset = __getInputValue("YOFFSET",200)*1;
+    linesiz = __getInputValue("LINESIZ",1)*1;
+    cellwdt = __getInputValue("CELLWDT",15)*1;
+    cellhgt = __getInputValue("CELLHGT",31)*1;
+    logowdt = __getInputValue("LOGOWDT",0)*1;
+    logohgt = __getInputValue("LOGOHGT",0)*1;
+}
+
+function __calcSize(){
+    var isNotCell = document.getElementById("CELLWDT").disabled;
+    if(isNotCell){
+        cellwdt = Math.floor(logowdt/6 - linesiz);
+        cellhgt = Math.floor(logohgt/3 - linesiz);
+        __setInputValue("CELLWDT",cellwdt);
+        __setInputValue("CELLHGT",cellhgt);
+    }
+
+    logowdt = 6*(linesiz+cellwdt);
+    logohgt = 3*(linesiz+cellhgt);
+    __setInputValue("LOGOWDT",logowdt);
+    __setInputValue("LOGOHGT",logohgt);
+}
+
+function __drawStage(){
+    __drawDivHtml("STAGE",xoffset,yoffset,logowdt,logohgt,1,stagebg);
+}
+
+function __drawStone(){
+    var xoff = xoffset+linesiz;
+    var yoff = yoffset+linesiz;
+    var t = Math.ceil(cellwdt/2);
+    __drawDivHtml("STONEBODY",xoff,yoff,3*cellwdt+2*linesiz,3*cellhgt+linesiz,2,stonebg);
+    __drawDivHtml("STONEEYES",xoff+t,yoff+t,cellwdt-t,cellwdt-t,3,horsebg);
+    __drawDivHtml("STONENECK",xoff+cellwdt+linesiz,yoff+cellhgt,2*cellwdt+linesiz,linesiz,3,horsebg);
+    __drawDivHtml("STONELEG1",xoff+cellwdt,yoff+2*cellhgt+linesiz,linesiz,cellhgt,3,horsebg);
+    __drawDivHtml("STONELEG2",xoff+2*cellwdt+linesiz,yoff+2*cellhgt+linesiz,linesiz,cellhgt,3,horsebg);
+}
+
+function __drawHorse(){
+    var xoff = xoffset+3*cellwdt+3*linesiz;
+    var yoff = yoffset+linesiz;
+    var t = Math.ceil(cellwdt/2);
+    __drawDivHtml("HORSEBODY",xoff,yoff,3*cellwdt+2*linesiz,3*cellhgt+linesiz,2,horsebg);
+    __drawDivHtml("HORSEEYES",xoff+2*cellwdt+2*linesiz,yoff+t,cellwdt-t,cellwdt-t,3,stonebg);
+    __drawDivHtml("HORSENECK",xoff,yoff+cellhgt,2*cellwdt+linesiz,linesiz,3,stonebg);
+    __drawDivHtml("HORSELEG1",xoff+2*cellwdt+linesiz,yoff+2*cellhgt+linesiz,linesiz,cellhgt,3,stonebg);
+    __drawDivHtml("HORSELEG2",xoff+cellwdt,yoff+2*cellhgt+linesiz,linesiz,cellhgt,3,stonebg);
+}
+
+function __drawDivHtml(id,x,y,w,h,z,bg){
+    var divstyle = "left:{x}px;top:{y}px;background-color:{bg};width:{w}px;height:{h}px;z-index:{z};position:absolute;overflow:hidden;border:0px;";
+    var obj = document.getElementById(id);
+    divstyle = divstyle.replace(/\{x\}/gi,x);
+    divstyle = divstyle.replace(/\{y\}/gi,y);
+    divstyle = divstyle.replace(/\{w\}/gi,w);
+    divstyle = divstyle.replace(/\{h\}/gi,h);
+    divstyle = divstyle.replace(/\{z\}/gi,z);
+    divstyle = divstyle.replace(/\{bg\}/gi,bg);
+    if(obj == null){
+        document.write("<div id='"+id+"' style='"+divstyle+"'></div>");
+    }else{
+        obj.setAttribute('style',divstyle);
+    }
+}
+
+function __getInputValue(id,val){
+    var obj = document.getElementById(id);
+    if(obj == null) return val;
+    return obj.value;
+}
+function __setInputValue(id,val){
+    var obj = document.getElementById(id);
+    if(obj == null) return;
+    obj.value=val;
+}
+
+drawMargorpLogo();
+
+</script>

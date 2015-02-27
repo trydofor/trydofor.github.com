@@ -1,0 +1,172 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+码工魄之JAVA异常处理
+^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-12-16
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 异常作用
+^^^^^^^^^^^
+如果把程序比作一棵树，那么，根系是需求，正常逻辑是主干，异常处理就是枝叶。
+枝叶健康得当便有更多机会捕捉阳光雨露，歪斜则易断枝，过大还招风呢 ^_^）
+因此，异常处理的好坏，恰当与否，都反映和影响着程序的健康状态与生命力。
+
+JAVA异常有三大类，关系如下：[ST]
+........................................
+java.lang.Object
+ |-java.lang.Throwable
+    |-java.lang.Error
+    |-java.lang.Exception
+       |-java.lang.RuntimeException
+........................................
+
+第一类，是受检异常（checked exception）。
+用来提示用户注意和适当的处理，是可预期的和修复的。
+
+第二类，是错误（error），由java.lang.Error及其子类组成。
+用来表示程序外部错误，一般不可预期和修复，比如硬件资源。
+
+第三类，是运行时异常（runtime exception），
+由java.lang.RuntimeException及其子类组成。
+用来表示程序内部错误，一般不可预期和修复，比如程序bug。
+
+2. 大师总结
+^^^^^^^^^^^
+“Effective Java 第2版”的第九章，专门讲了异常，提到的经验有。[EJ]
+ * 第57条：只针对异常的情况才使用异常。
+ * 第58条：对可恢复的情况使用受检异常，对编程错误使用运行时异常。
+ * 第59条：避免不必要地使用受检异常。
+ * 第60条：优先使用标准的异常。
+ * 第61条：抛出与抽象相对应的异常。
+ * 第62条：每个方法抛出的异常都要有文档。
+ * 第63条：在细节消息中包含能捕捉的失败的信息。
+ * 第64条：努力使失败保持原子性。
+ * 第65条：不要忽略异常。
+
+其中，
+第60条指示我们，使用以下常用异常：
+ * IllegalArgumentException    参数不合适
+ * IllegalStateException       对象状态不合适
+ * NullPointerException        禁止null
+ * IndexOutOfBoundsException   下标越界
+ * ConcurrentModificationException  并发修改
+ * UnsupportedOperationException    操作为实现
+
+第61条提到了异常链（exception chaining），经常用到的方法有：
+ * Throwable getCause()
+ * Throwable initCause(Throwable)
+ * Throwable(String, Throwable)
+ * Throwable(Throwable)
+ * Throwable getStackTrace()
+ * Throwable setStackTrace(StackTraceElement[])
+
+3. 常用异常
+^^^^^^^^^^^
+对jdk1.6.0_16和spring-framework-3.0.0.RELEASE-with-docs.zip的源代码中使用
+的异常进行了粗略的统计和排序，以下是过程和结果，也反映了第60条经验。
+[[java6数据=&gt;./data/java6.zip]][[spring3数据=&gt;./data/spring3.zip]]
+
+========================= tty: 异常的统计过程 =========================
+pwd
+&gt;/home/trydofor/java
+mkdir java6-src/
+cd java6-src/
+unzip ../src.zip
+cd ..
+unzip spring-framework-3.0.0.RELEASE-with-docs.zip
+mv spring3-src/spring-framework-3.0.0.RELEASE spring3-src
+ll
+&gt;drwxrwxr-x  2 trydofor trydofor     4096 Dec 19 09:22 java6-src
+&gt;drwxrwxr-x  2 trydofor trydofor     4096 Dec 19 09:23 spring3-src
+&gt;-rw-rw-r--  1 trydofor trydofor 46699488 Dec 18 09:07 
+&gt;                 spring-framework-3.0.0.RELEASE-with-docs.zip
+&gt;-rw-rw-r--  1 trydofor trydofor 19641221 Jul 31 16:30 src.zip
+find java6-src -name '*.java' |wc -l
+&gt;7196
+find spring3-src/projects/ -name '*.java'|wc -l
+&gt;4093
+#spring3-src/projects/org.springframework.expression/src/main/java/org/
+#springframework/expression/common/TemplateAwareExpressionParser.java
+#这个类是Mac下编写的，需要把 \r换成 \n 才能正确处理，否则整个文件当做一行处理。
+
+find java6-src -name '*.java' |xargs cat | tr '\r' '\n'|
+ grep '[ \t\n]*throw[ \t\n]\+new' &gt; java6.thrown.txt
+find spring3-src/projects -name '*.java'|xargs cat | tr '\r' '\n'|
+ grep '[ \t\n]*throw[ \t\n]\+new' &gt; spring3.thrown.txt
+wc -l *.txt
+&gt; 10959 java6.thrown.txt
+&gt;  2994 spring3.thrown.txt
+&gt; 13953 total
+
+sed -n 's/.*throw[ \t]\+new[ \t]\+\([^(]\+\).\+/\1/p' java6.thrown.txt |
+ sort |uniq -c | sort -nr &gt;java6.exception.txt
+sed -n 's/.*throw[ \t]\+new[ \t]\+\([^(]\+\).\+/\1/p' spring3.thrown.txt |
+ sort |uniq -c | sort -nr &gt;spring3.exception.txt
+
+head java6.exception.txt
+&gt;   2153 IllegalArgumentException
+&gt;    795 NullPointerException
+&gt;    438 RuntimeException
+&gt;    295 UnsupportedOperationException
+&gt;    291 DOMException
+&gt;    280 IllegalStateException
+&gt;    245 IOException
+&gt;    219 IndexOutOfBoundsException
+&gt;    185 ReadOnlyBufferException
+&gt;    161 InternalError
+head spring3.exception.txt
+&gt;    574 IllegalStateException
+&gt;    561 IllegalArgumentException
+&gt;    217 UnsupportedOperationException
+&gt;    128 RuntimeException
+&gt;     66 InvalidResultSetAccessException
+&gt;     62 SpelEvaluationException
+&gt;     56 OperationNotSupportedException
+&gt;     55 TransactionSystemException
+&gt;     52 InvalidDataAccessApiUsageException
+&gt;     47 ServletException
+=========================================================================
+
+4. 低级习惯
+^^^^^^^^^^^
+ 1) 作为流程控制。违法异常设计初衷。
+ 2) 私吞异常。包括空catch块或printStackTrace等伪处理。异常，要么处理好，要么不处理。
+ 3) 异常覆盖。catch或finally块内引发异常，覆盖源头问题，信息丢失。
+
+================= java: 异常转换与防覆盖 =================
+boolean succeed = false;
+List r = null;
+S2AttributeReportDao dao = null;
+try{
+    dao = new S2AttributeReportDao();
+    r = dao.getNewNameReportCandidates(jicAccountDate);
+    succeed = true;
+}catch(DaoException e){
+    throw new ServiceException(e);
+}finally{
+    if(dao != null){
+        try{
+            dao.dispose();
+        }catch(DaoException de){
+            if(succeed){
+                throw new ServiceException(de);
+            }
+        }
+    }
+}
+return r==null?new ArrayList():r;
+==========================================================
+
+5. 参考资料
+^^^^^^^^^^^
+ * ST [[Sun的Java指南=&gt;http://java.sun.com/docs/books/tutorial/essential/exceptions/index.html]]
+ * EJ Effective Java 第2版（ISBN 978-7-111-25583-3，机械工业出版社）
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

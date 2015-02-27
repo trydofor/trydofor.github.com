@@ -1,0 +1,45 @@
+﻿BODY {
+    margin: 5px;
+}
+BODY,TD{
+    font-size: 12px;
+    font-family:"宋体",Simsun;
+    line-height: 100%;
+    text-align:left;
+    vertical-align: top;
+    white-space:normal;
+    word-break:break-all; 
+    word-wrap:break-word;
+}
+.a9w3_board_info_on {
+	border: 1px dashed #44aadd;
+	background-color:#FFFFFF;
+}
+.a9w3_board_info_off {
+	border: 1px dashed #999999;
+	background-color:#EFEFEF;
+}
+.a9w3_board_from {
+    width:100%;
+    height:20px;
+	font-size: 12px;
+	border: 1px solid #999999;
+}
+.a9w3_board_code {
+    width:100%;
+    height:20px;
+	font-size: 12px;
+	border: 1px solid #999999;
+}
+.a9w3_board_text {
+    width:100%;
+    height:200px;
+    font-size: 12px;
+	border: 1px solid #999999;
+}
+.a9w3_board_button {
+    width:55px;
+    height:20px;
+	background-color:#EFEFEF;
+	border: 1px solid #999999;
+}

@@ -1,0 +1,43 @@
+﻿<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../../../a9w3-engine/data/style/black/board.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+var uhome = "http://www.trydofor.com/a9w3-auhome/trydofor/";
+function onFeed(type){
+    var url = uhome+"helpers/sitemap/"+type+".xml";
+    if(window.prompt("copy the url or open in new window",url)){
+        window.open(url);
+    }
+}
+function drawSubsribe(){
+    var rst = [];
+    var keyval=[
+        '抓虾(zhuaxia.com)','http://www.zhuaxia.com/add_channel.php?url=$rss',
+        '鲜果(xianguo.com)','http://www.xianguo.com/subscribe.php?url=$rss',
+        'Fusion.google','http://fusion.google.com/add?feedurl=$rss',
+        'Reader.google','http://www.google.com/reader/view/feed/$rss',
+        'FeedBurner','http://feeds2.feedburner.com/trydofor',
+        'Subscribe by Email','http://feedburner.google.com/fb/a/mailverify?uri=trydofor'
+    ];
+    var rss = uhome+'helpers/sitemap/rss.xml';
+    for(var i=0;i<keyval.length;i+=2){
+        var key = keyval[i];
+        var val = keyval[i+1];
+        if(val.indexOf('$rss')>=0){
+            val = val.replace('$rss',rss);
+        }
+        rst.push("<li style='line-height:120%'><a href='"+val+"' target='_blank' style='color:black'>"+key+"</a></li>");
+    }
+    
+    return rst.join("");
+}
+</script>
+<fieldset style="padding:10px;padding-top:0px">
+<legend style="padding:10px;">Summary Feed</legend>
+    <input type="image" onClick="onFeed('atom')" src="../../../a9w3-engine/data/image/img-atom.png">
+    <input type="image" onClick="onFeed('rss')" src="../../../a9w3-engine/data/image/img-rss.png">
+</fieldset>
+<br/>
+<fieldset  style="padding:10px;padding-top:0px">
+<legend style="padding:10px;">Subscribe to</legend>
+    <script type="text/javascript">document.write(drawSubsribe())</script>
+</fieldset>

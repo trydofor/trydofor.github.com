@@ -4,30 +4,35 @@ layout: default
 
 <div id="main" role="main">			
 	<article class="wrap" itemscope itemtype="http://schema.org/Article">
-		{% if page.image.feature %}
-		<div class="page-feature">
-			<div class="page-image">
-				<img src="{{ site.url }}/images/{{ page.image.feature }}" class="page-feature-image" alt="{{ page.title }}" itemprop="image">
-				{% if page.image.credit %}{% include image-credit.html %}{% endif %}
-			</div><!-- /.page-image -->
-		</div><!-- /.page-feature -->
-		{% endif %}
-		{% include breadcrumbs.html %}
-		<div class="page-title">
-			<h1>{{ page.title }}</h1>
-		</div>
+        <div>
+        {% if page.category %}
+          <a href="{{ site.url }}/{{ page.category }}/" class="btn-info">{{ site.data.category[page.category]}}▼</a> 
+        {% endif %}
+        <a href="{{ site.url }}/archive/year.html#{{page.date | date: '%Y'}}" class="btn-info">{{page.date | date: '%Y'}}▼</a> 
+        {% if page.tags %}
+        {% for tag in page.tags %} 
+          <a href="{{ site.url }}/archive/tag.html#{{ tag }}" class="btn-success">{{ tag }}</a> 
+        {% endfor %}
+        {% endif %}
+        </div>
 		<div class="inner-wrap">
 			<nav class="toc"></nav><!-- /.toc -->
 			<div id="content" class="page-content" itemprop="articleBody">
 				{{ content }}
-				<hr />
+                {% if page.teaser %}
+                <div style="margin:2rem 0 2rem 0">
+                <img id="teaserinfo" src="{{ site.url }}/images/{{ page.teaser }}" alt="《{{page.title}}》 {{page.excerpt}}" itemprop="image">
+                {% if page.teaserinfo %}<div style="max-width:400px">题图：{{page.teaserinfo}}</div>{% endif %}
+                </div>
+                {% endif %}
 				<footer class="page-footer">
-					{% if page.categories %}{% include page-author.html %}{% endif %}
-					{% if page.share != false %}{% include share-this.html %}{% endif %}
-					{% include page-meta.html %}
+					{% include page-author.html %}
+                    {% include page-meta.html %}
 				</footer><!-- /.footer -->
 				<aside>
-					{% if page.comments == true %}{% include comments.html %}{% endif %}
+                    {% include page-navi.html %}
+                    {% if page.share == true %}{% include share-this-baidu.html %}{% endif %}
+                    {% if page.comments == true %}{% include comments-duoshuo.html %}{% endif %}
 				</aside>
 			</div><!-- /.content -->
 		</div><!-- /.inner-wrap -->

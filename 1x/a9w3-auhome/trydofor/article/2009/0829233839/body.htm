@@ -1,0 +1,59 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+归档聊天记录(Skype4Py)
+^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-08-29
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+1. 归档备查
+^^^^^^^^^^^
+"数据肯定是手动维护的,但不知道是那次委托的了 ... ..."
+"太长时间前的历史记录找不到了 ... ..."
+"窗口太多了,翻了半天 ... ..."
+"上周刚讲明白,咋又问了呢 ... ..."
+
+业务交流用Skype,每天会闪动上千条消息.
+10个项目组协作用多人会话窗口.
+5个公司事务多人会话窗口.
+25个业务QA多人会话窗口.
+若干个私人对话窗口.
+
+2. 自己动手
+^^^^^^^^^^^
+有个软件不错,可以通过IMAP归档Skype到Gmail.
+IM Archiver for Business / 1.0.4
+Business | recorder recording backup google
+IM Archiving for Regulatory Compliance
+Developed by: IM-History
+Free trial - 14 days (5,99 per month, 39,99 per year)
+http://www.im-history.com/im-archiver
+
+自己动手丰衣足食,just for fun.
+登陆 http://developer.skype.com 眼睛一亮.
+
+先看到 Skype4Java 立马下了skype_1.0.zip/14.2MB
+导入Eclipse才发现,JDK 1.5+,公司开发用 JDK1.4.2.
+为了不扰乱工程,引入潜在危险,忍了.
+
+又看到 Skype4Py. Skype4Py-1.0.31.0.zip/142.8KB
+可见多了解一门外语是多么重要啊 ;D
+文档很细,例子也很好,Ctrl-C and Ctrl-V了2个程序.
+并py2exe了一下,给没python环境的人用了下.嗯,好使.
+
+SkypeActChat.py (100行)
+钩子Message,并分日期和窗口存入htm文件.
+SkypeChatLog.py (122行)
+取得所有Chat窗口,按窗口归档介于两个日期参数间的消息.
+
+[[源文件(3Kb)=&gt;./data/src.zip]]
+[[Skype4Py包(105Kb)=&gt;./data/Skype4Py-1.0.31.0.tar.gz]]
+[[绿色EXE包(1.7Mb)=&gt;./data/py2exe.zip]]
+
+不了解python的各位看官,
+切勿在浏览器地址栏中输入python后Ctrl-Enter.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

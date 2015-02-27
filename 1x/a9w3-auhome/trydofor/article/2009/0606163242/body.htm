@@ -1,0 +1,122 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Credit故事之CAFIS改造
+^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-05-12
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. CAFIS为何物
+^^^^^^^^^^^^^^
+CAFIS -- Card And Finance Information System
+http://www.cafis.jp
+NTTデータのCAFISは、カード取引をスポーディーに処理する、
+日本で最大のカード決済総合サービスです。
+
+Cafis是Credit的一个子系统,相关代码量30000行,20多人月的样子.
+2005-03-14 设计开发,2005-10-11 在线测试,2005-10-18 正式运营.
+Livedoor事件之前,有3家合作银行,最高年交易次数为103943次.
+
+IVR(Interactive Voice Response),即互动式语音应答,是Cafis的衍生子系统.
+同一套业务逻辑,相似的接口,提供和ATM提款机一致电话服务.
+
+此外,Cafis还有一些辅助子系统,比如制作卡和卡密码及卡管理功能.
+
+Cafis子系统,基于Socket,解析byte电文,使用Thread.
+提供7*24不间断在线服务,是Credit项目中最早,最完整,最稳定的Socket的服务程序.
+为后续的项目,提供了坚实的框架和丰富经验.
+
+2. 彪悍的程序
+^^^^^^^^^^^^^
+"彪悍的程序不需要测试",是Cafis开发中扯蛋时,篡改老罗而广为流传的一句话.
+沾Cafis的光,当年年会,老徐用这句话介绍我.三年后某日,同事用这句话想起我.
+
+2005年初,正是livedoor蒸蒸日上,大家生龙活虎加班都不知道累的时候.
+这个大的背景下,Cafis受到了极高的关注和投入,各个环节都非常到位.
+
+Cafis之所谓强悍,主要是,
+1. 程序层次结构清晰明确.
+2. 异常检查和处理丰富,前置后置校验多.
+3. 测试程序完备,自成一体.
+
+========================== txt Cafis工作示意图 ==========================
+.__CAFIS__   _____________Cafis-System_____________   __DB-Server__ 
+|         | |                                      | |             |
+|         | | Session-Manager |  Business-Manager  | |             |
+|Non-Stop | | --------------- |  ----------------- | |     DB2     |
+| Server  | | Thread-Request  |  Thread-Processor  | |             |
+|         | | Thread-Response |  Thread-Monitor    | |             |
+|_________| |______________________________________| |_____________|
+=========================================================================
+
+首先CAFIS网关,提供了一个NonStop-Server(NSS),提供7*24的服务器.
+Cafis程序,主动连接NSS的指定端口,并保持链接.
+Thread-Request,把来至NSS的请求电文解析,并放入Thread-Processor队列.
+Thread-Processor,处理业务,并把处理结构放入给Thread-Response队列.
+Thread-Response,组装结果电文,发送给NSS.
+Thread-Monitor,监控Cafis-System的内部状态和发送警报.
+然后,Cafis-System所在的服务器,有另外一套监控脚本,以防止Thread-Monitor失效.
+
+2006年以来,除了增加IVR功能,Cafis一直没有进行过修改,就这样7*24的跑了3年多.
+
+3. 夜幕下的黑手
+^^^^^^^^^^^^^^^
+世事多变幻,Credit业务在经济危机的背景下,迅速吞掉了其他竞争对手.
+包括之前Livedoor事件时,以以和Livedoor为荣的几家合作公司.
+业务发展导致的开发压力,就行放了酵母的面团一样,膨胀了数倍.
+
+Cafis这片净土亦难逃一改.
+2009-05-04,阿水提出,Cafis以版本所在服务器进行分流.
+
+========================== txt Cafis改造方案 =================================
+
+1. 修改Cafis-System,使之可以链接多个DB2,需要修改现有框架和底层公共代码.
+.__CAFIS__   _____________Cafis-System_____________   __DB-Server__ 
+|         | |                                      | |             |
+|         | | Session-Manager |  Business-Manager  | |     DB2-1   |
+|Non-Stop | | --------------- |  ----------------- | |_____________|
+| Server  | | Thread-Request  |  Thread-Processor  | |             |
+|         | | Thread-Response |  Thread-Monitor    | |     DB2-n   |
+|_________| |______________________________________| |_____________|
+
+2. 在Non-Stop-Server和Cafis-System间增加包转发代理,不修改现有代码.
+.__CAFIS__   __Agent__   _____________Cafis-System-1___________   _DB-Server_ 
+|         | |         | |                                      | |           |
+|         | |  Thread | | Session-Manager |  Business-Manager  | |           |
+|         | |  -Req   | | --------------- |  ----------------- | |    DB2    |
+|         | |         | | Thread-Request  |  Thread-Processor  | |           |
+|         | |  Thread | | Thread-Response |  Thread-Monitor    | |           |
+|Non-Stop | |  -Dst   | |______________________________________| |___________|
+| Server  | |         |  _____________Cafis-System-2___________   _DB-Server_ 
+|         | |  Thread | |                                      | |           |
+|         | |  -Res   | | Session-Manager |  Business-Manager  | |           |
+|         | |         | | --------------- |  ----------------- | |    DB2    |
+|         | |  Thread | | Thread-Request  |  Thread-Processor  | |           |
+|         | |  -Mnn   | | Thread-Response |  Thread-Monitor    | |           |
+|_________| |_________| |______________________________________| |___________|
+==============================================================================
+
+选择了方案2,原因是安全.
+于是构造了这样一个代理,把NSS的包解析后分发到正确的版本.
+待各版本有返回结果时,把结果以原Session返回给NSS.
+透明代理,NSS和Cafis-System完全不知道有这么一层存在而已.
+
+2009-05-27是发布日,必然通宵,但却没有压力,也没心思干活.
+原因可能老头比较清楚吧,O(∩_∩)O 哈哈~.
+
+18:00到21:00,耗时3个小时,写了15个类,1129行代码,完成了这个Agent.
+可以基于Rule自定义分发规则,测试了几遍,和预期的一样.
+
+完全不知该如何对这3小时的行为做结论和评价.
+视乎很牛B,但却有说不出的失落.
+
+Agent的创造,就是一只通过我伸向Cafis的的黑手.
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

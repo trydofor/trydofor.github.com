@@ -1,0 +1,192 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+码工魄之JAVA方法修炼之道
+^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2009-12-03
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 方法构成
+^^^^^^^^^^^
+在程序开发中，Method译作：方法、函数。本文主要讨论Java中的方法。
+
+从语法结构上看，一个高质量的方法应该包括以下部分。[ST]
+ * 注释，说明使用方法或特殊用途，如javadoc注释或@Annotation。
+ * 修饰符，限定作用域，可见性等，如public,static等。
+ * 返回值，正常结束的情况。
+ * 方法名，简明扼要的名字，如 getter,setter等。
+ * 参数列表，方法的参数。
+ * 异常列表，异常结束的情况。
+ * 方法主体，代码实现部分。
+
+从数据流向上看，方法一般包括了一个输入流（参数列表）和一个输出流。
+输出流要么是正常输出流（返回值），要么是异常输出流（异常列表）。
+
+2. 大师总结
+^^^^^^^^^^^
+“Effective Java 第2版”的第七章，专门讲了方法，提到的经验有。[EJ]
+ * 第38条：检查参数的有效性。
+ * 第39条：必要时进行保护性拷贝。
+ * 第40条：谨慎设计方法签名。
+ * 第41条：慎用重载(overload)。
+ * 第42条：慎用可变参数。
+ * 第43条：返回零长度数组或者集合，而不是null。
+ * 第44条：为所有导出的API元素编写文档注释。
+
+3. 低级经验
+^^^^^^^^^^^
+大师总结的第38，40，43条最为受用，应该是作为必备技能。
+立足于国情行情，在代码堆中堆代码的时候，我们还要注意以下的低级经验。
+根本目的是为了提高代码的可读性，便于理解和维护。
+
+3.1. MM01-保证方法的一致性
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+一致性包括两个：说明，名称，行为三者间的一致；各返回值分支意义的一致。
+为了方便理解，虚构一个五毒俱全的方法，该方法要求：
+
+======================= text: 方法要求 ======================
+/** 
+ * 返回一个拷贝列表，元素为list中从0（包括 ）到 length（不包括）。
+ * 如果指定列表为null或length小于等于0，则返回空列表。
+ * 如果length大于等于指定列表长度，则拷贝包括所有元素。
+ * 
+ * @param list 指定列表，即数据源。
+ * @param length 指定长度。
+ * @return 一个拷贝列表，元素为list中从0（包括 ）到 length（不包括）。
+ */
+=============================================================
+
+===================== java: bad copyOf ======================
+public &lt;E&gt; List&lt;E&gt; copyOf(List&lt;E&gt; list,int length){
+    if(list == null || length&lt;=0) return new LinkedList();
+    if(length&lt;list.size()){
+        return list.subList(0, length);
+    }else{
+        return list;
+    }
+}
+=============================================================
+
+从方法名和要求上看，该方法的返回值是一个拷贝，对该拷贝的操作，不会影响到源list。
+方法有三个返回值分支(return)，其中，只有第一个分支不影响源list。
+像下面这样修改回好些。（少了return，多了if-else，见仁见智的吧）
+
+===================== java: new copyOf ======================
+public &lt;E&gt; List&lt;E&gt; copyOf(List&lt;E&gt; list,int length){
+    List&lt;E&gt; result = new LinkedList&lt;E&gt;();
+    if(list == null || length&lt;=0){
+        // empty
+    }else if(length&lt;list.size()){
+        result.addAll(list.subList(0, length));
+    }else{
+        result.addAll(list);
+    }
+    return result;
+}
+=============================================================
+
+3.2. MM02-精简方法体的体积
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+方法体积过大会影响理解和阅读，个人认为超过三屏的方法会影响阅读，该考虑精简了。
+但不需要阅读和深入理解的代码，如自动生成的，套路相同的代码堆不需要精简。
+
+功能强的大方法，可以提升为类，再封装成数据和方法。
+功能杂的大方法，可以打散为若干小方法的组合。
+大的if-else,switch-case块，可以提炼成小方法的组合。[RP,98]
+==================== java: 组合小方法 ====================
+public void add(Object element){
+    if(!readOnly){
+        int newSize = size + 1;
+        if(newSize &gt; elements.length){
+            Object[] newElements = new Object[elements.length + 10];
+            for(int i=0; i &lt; size;i++)
+                newElements[i] = elements[i];
+            elements = newElements;
+        }
+        elements[size++] = element;
+    }
+}
+// 重构为下面这样。
+public void add(Object element){
+    if(readOnly) return;
+    if(atCapacity()) grow();
+    addElement(element);
+}
+==========================================================
+
+3.3. MM03-保持简洁的返回值分支
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+提前return有利于流程控制，但过多的或过于分散的return分支不利于阅读和维护。
+减少return分支的可以使用 if-else，switch-case块。（缺点，参看第 MM02条）
+
+总之，减少返回值分支的根本目的在于提高代码的可读性和维护性。
+
+3.4. MM04-必要时进行输出检查（返回值检查）
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+一个健壮的方法应该保证，如果输入正确，那么就要输出正确。
+输入检查，即“第38条：检查参数的有效性。”用来保证输入正确，
+可是输入正确，输出就一定能够正确么，能够和预期的一致么？
+输出检查就是为了提供这样一道防线，对非预期的情况给予纠正或报错。
+
+假设，某人写了addAbs方法，从字面上看下面方法没有问题，绝对值相加一定非负。
+===================== java: add abs ======================
+public long addAbs(int a,int b){
+    return Math.abs(a)+Math.abs(b);
+}
+==========================================================
+但是，该方法可以返回负值（相见Math.abs API），于是修改成了下面这样。
+===================== java: add abs ======================
+public long addAbsCheck(int a,int b){
+    long r = Math.abs(a)+Math.abs(b);
+    if(r&lt;0) throw new IllegalStateException("|"+a+"|+|"+b+"|="+r);
+    return r;
+}
+==========================================================
+可以看到，此时的输出检查要比输入检查节省和安全。
+（如果再多一个参数(int c)该如何写，如果数组呢？）
+
+3.5. MM05-为危险方法写好注释
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+什么样的方法属于危险方法？
+ * 非线程安全或兼容的，但有可能用在多线程环境下。
+ * 消耗高或调用重要资源的方法，比如，连接网络或大量占用内存等。
+ * 修改传入参数。
+ * 方法逻辑高深或不易理解。
+ * 返回值可能会因非输入参数而改变的。
+   比如依赖于类变量A，而A又不具备线程安全性。
+
+对于作者来说，危险方法一定要写好注释，以使调用者知其变数。
+对于调用者来说，不知变数的方法，可以调用一次完成的，
+尽量不要使用第二次，尤其某些貌似getter的方法。
+
+===================== java: getter ======================
+// product.getBarcode() 
+// 用来得到一个商品的条码，商品固定则条码固定。
+
+// 危险代码
+List&lt;Goods&gt; lg = store.getGoods();
+for (Goods goods : lg) {
+    goods.setBarcode(product.getBarcode());
+}
+// 安全代码
+Barcode bc = product.getBarcode();
+List&lt;Goods&gt; lg = store.getGoods();
+for (Goods goods : lg) {
+    goods.setBarcode(bc);
+}
+==========================================================
+
+10. 参考资料
+^^^^^^^^^^^^
+ * ST [[Sun的Java指南=&gt;http://java.sun.com/docs/books/tutorial/java/javaOO/methods.html]]
+ * EJ Effective Java 第2版（ISBN 978-7-111-25583-3，机械工业出版社）
+ * RP 模式与重构（ISBN 978-7-115-15336-4，人民邮电出版社）
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

@@ -1,0 +1,66 @@
+﻿<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../../data/style/black/list.css" rel="stylesheet" type="text/css">
+<link href="../../data/style/black/board.css" rel="stylesheet" type="text/css">
+<form target="__DATA_POSTER__" id="__DATA_FORM__" method="POST"  enctype="multipart/form-data">
+<!-- change password -->
+<br />
+<fieldset style="padding:10px;">
+<table border='0' cellspacing='2' cellpadding='0' width='100%'>
+<tr>
+	<td width="30"><strong>Old</strong></td>
+	<td><input type="password" name="PASS" id="PASS" class="a9w3_board_from"></td>
+</tr>
+<tr>
+	<td><strong>New</strong></td>
+	<td><input type="password" name="NEWP" id="NEWP" class="a9w3_board_from"></td>
+</tr>
+<tr>
+	<td><strong>Rep</strong></td>
+	<td><input type="password" name="RENP" id="RENP" class="a9w3_board_from"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+  <td>
+    <input type="button" onclick="onChpass()" name="chPass" value="chPass"  class="a9w3_board_button">
+    <input type="reset"  name="reset" value="Reset"  class="a9w3_board_button">
+  </td>
+</tr>
+</table>
+</fieldset>
+<br />
+<!-- site fingerprint -->
+<fieldset style="padding:10px;">
+<table border='0' cellspacing='2' cellpadding='0' width='100%'>
+<tr>
+	<td width="30"><strong>Inc</strong></td>
+	<td><input type="text" name="INCLUDE" id="INCLUDE" class="a9w3_board_from"></td>
+</tr>
+<tr>
+	<td><strong>Exc</strong></td>
+	<td><input type="text" name="EXCLUDE" id="EXCLUDE" class="a9w3_board_from"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+  <td>
+    <input type="button" onclick="onSitefp()" name="SiteFp" value="SiteFp"  class="a9w3_board_button">
+    <input type="reset"  name="reset" value="Reset"  class="a9w3_board_button">
+  </td>
+</tr>
+</table>
+</fieldset>
+<br />
+<!-- others -->
+<fieldset style="padding:10px;">
+<input type="button" onclick="onRenew()"   name="Renew"   value="Renew" style="background-color:#99CCFF" class="a9w3_board_button">
+<input type="button" onclick="onSitemap()" name="Sitemap" value="Sitemap" style="background-color:#99CCFF" class="a9w3_board_button">
+<input type="button" onclick="onBackup()"  name="Backup"  value="Backup" style="background-color:#99CCFF" class="a9w3_board_button">
+<br /><br />
+<input type="button" onclick="onLogout()"  name="Logout"  value="Logout" style="background-color:#99CCFF" class="a9w3_board_button">
+</fieldset>
+<br />
+<fieldset style="padding:10px;">
+TimeOffset(c/s):<span id="__TIME_OFFSET__">0/0</span>
+</fieldset>
+</form>
+<iframe onload="try{onDataResponse()}catch(e){}" onreadystatechange="try{onDataResponse()}catch(e){}" id="__DATA_POSTER__" name="__DATA_POSTER__" width='0px' height='0' frameborder='0' src="about:blank"  style="display:none"></iframe>
+<script type="text/javascript" src="../../core/writer/list-admin.js"></script>

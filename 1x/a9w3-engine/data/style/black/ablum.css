@@ -1,0 +1,25 @@
+﻿BODY {
+    margin: 5px;
+}
+BODY,TD,SPAN{
+    font-size: 12px;
+    font-family:"宋体",Simsun;
+    line-height: 100%;
+    text-align:left;
+    vertical-align: top;
+    white-space:normal;
+    word-break:break-all; 
+    word-wrap:break-word;
+}
+.a9w3_album_outerbox {
+    border:1px solid #333333;
+}
+.a9w3_album_innerbox {
+    border:1px solid #FFFFFF;
+}
+.a9w3_edit_text_on {
+	border: 1px solid #44aadd;
+}
+.a9w3_edit_text_off {
+	border: 1px solid #000000;
+}

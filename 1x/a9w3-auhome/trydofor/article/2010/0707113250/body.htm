@@ -1,0 +1,215 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+Scriptella ETL 快速上手
+^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2010-07-07
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. Scriptella 预备知识
+^^^^^^^^^^^^^^^^^^^^^^
+官方网站：http://scriptella.javaforge.com/
+许可证：Apache License, Version 2.0
+当前版本：Scriptella 1.0 Released (May 5, 2010)
+系统需求：JRE 5.0+ （有些driver要求更高JRE，如JSR 223，要JRE6）
+
+典型应用：（官方资料的简译）
+ * 执行 SQL，JS,JEXL,Velocity等脚本。
+ * 数据库迁移。LDAP，JDBC，XML等数据源的协作。
+ * 跨DB的ETL操作，以CSV，文本，XML等格式的导入导出。
+ * 作为Ant的一个task。 
+ * Db Schema 的自动升级。
+
+官方文档：
+ * 略读，快速入门：http://scriptella.javaforge.com/tutorial.html
+ * 细读，常见问题：http://scriptella.javaforge.com/faq.html
+ * 研究，参考手册：http://scriptella.javaforge.com/reference/index.html
+ * 理解，API 文档：http://scriptella.javaforge.com/docs/api/index.html
+ * 了解，HOWTOs： 这个目前有两个，看看即可。
+ * 即用即查，驱动帝国：http://scriptella.javaforge.com/reference/drivers.html
+
+2. Scriptella 常用示例
+^^^^^^^^^^^^^^^^^^^^^^
+以下示例都是官方网站中比较有代表性的。
+这里只是进行了简单的集中和部分注释。
+
+2.1. JavaScript的使用
+^^^^^^^^^^^^^^^^^^^^^
+[[官方地址&lt;=http://scriptella.javaforge.com/docs/api/scriptella/driver/script/package-summary.html]]
+
+The following query executes a child script 10 times. As the result of
+execution 10 records are inserted into a database table.
+Additionally a log file log.txt is produced.
+
+简译：下面的Query执行了10次内嵌Script。
+效果是，在DB中插入了10条记录，并产生日志log.txt。
+
+================ xml: 完整的ETL文件 ================
+&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;!-- 指定编码，防止系统弄错字符集 --&gt;
+&lt;!DOCTYPE etl SYSTEM "http://scriptella.javaforge.com/dtd/etl.dtd"&gt;
+&lt;etl&gt;
+    &lt;connection id="script" driver="script"/&gt;
+    &lt;connection id="out" driver="oracle" url="jdbc:oracle:thin:@localhost:1521:DB"/&gt;
+    &lt;connection id="log" driver="script" url="log.txt"/&gt;
+
+    &lt;query connection-id="script"&gt;
+        &lt;![CDATA[
+        for (var i = 0; i &lt; 10; i++) {
+            login = 'login' + i;
+            //You can instantiate Java objects and invoke static methods
+            var now = new java.sql.Timestamp(java.lang.System.currentTimeMillis());
+            query.next(); //Executes a child script element // * 执行后续的所有元素
+        }]]&gt;
+
+        &lt;!-- Inserts a parameterized row into a database --&gt;
+        &lt;script connection-id="out"&gt;
+            INSERT INTO Table(ID, Login, Login_Time) VALUES (?i, ?login, ?now);
+        &lt;/script&gt;
+        
+        &lt;!-- Logs the message using MessageFormat class and parent context variables --&gt;
+        &lt;script connection-id="log"&gt;
+            // create Java String array of 2 elements
+            var a = java.lang.reflect.Array.newInstance(java.lang.Object, 2)
+            a[0] = now;a[1] = i;
+            println(format.format(a));
+        &gt;/script&gt;
+    &lt;/query&gt;
+&lt;/etl&gt;
+====================================================
+
+2.2. CSV文件的使用
+^^^^^^^^^^^^^^^^^^
+[[官方地址&lt;=http://scriptella.javaforge.com/docs/api/scriptella/driver/csv/package-summary.html]]
+
+================ xml: ETL文件片段 ==================
+&lt;connection id="in" driver="csv" url="data.csv" /&gt;
+&lt;connection id="out" driver="csv" url="report.csv"&gt;
+    #Use empty quote to turn off quoting
+    quote=
+    separator=;
+&lt;/connection&gt;
+&lt;!-- connection里面可以设置参数，各个connection不一样 --&gt;
+
+&lt;script connection-id="out"&gt;
+    ID,Priority,Summary,Status
+&lt;/script&gt;
+
+&lt;query connection-id="in"&gt;
+    &lt;!--Empty query means select all--&gt;
+    &lt;script connection-id="out"&gt;
+        $rownum,$priority,$summary,$status
+    &lt;/script&gt;
+&lt;/query&gt;
+====================================================
+
+================= txt: data.csv ====================
+priority,summary,status
+11,summary1,21
+12,summary1,22
+====================================================
+
+================ txt: report.csv ===================
+ID;Priority;Summary;Status
+1;11;summary1;21
+2;12;summary1;22
+====================================================
+
+解说：
+$priority,$summary,$status，就是CVS的头（首行） priority,summary,status。
+
+2.3. 文本文件的使用
+^^^^^^^^^^^^^^^^^^^
+[[官方地址&lt;=http://scriptella.javaforge.com/docs/api/scriptella/driver/text/package-summary.html]]
+
+大部分时候，我们处理文本，用到Text Driver，然后用正则表达式匹配行划分组。示例比较简单。
+
+2.4. 发送邮件的使用
+^^^^^^^^^^^^^^^^^^^
+[[官方地址&lt;=http://scriptella.javaforge.com/docs/api/scriptella/driver/mail/package-summary.html]]
+
+================ xml: HTML邮件 ==================
+&lt;etl&gt;
+    &lt;connection driver="mail" url="mailto:user@nosuchhost.com?subject=Hello"
+            classpath="mail.jar:activation.jar"&gt;
+        type=html
+        mail.smtp.host=mail.host.name
+        mail.user=user
+        mail.password=password
+        mail.from=Firstname Lastname &lt;user@nosuchhost.com&gt;
+    &lt;/connection&gt;
+    &lt;script&gt;&lt;![CDATA[
+        &lt;html&gt;
+            &lt;body&gt;
+                Hello,
+                &lt;hr&gt;
+                &lt;a href="http://scriptella.javaforge.com/" title="Powered by Scriptella ETL"&gt;
+                    &lt;img src="http://scriptella.javaforge.com/images/scriptella-powered.gif" 
+                            width="88" height="31" border="0" alt="Powered by Scriptella ETL"&gt;
+                &lt;/a&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;]]&gt;
+    &lt;/script&gt;
+&lt;/etl&gt;
+====================================================
+
+================ xml: 动态发邮件 ==================
+&lt;etl&gt;
+    &lt;connection id="mail" driver="mail" url="mailto:$email?subject=Hello $name"
+            classpath="mail.jar:activation.jar"&gt;
+        mail.smtp.host=mail.host.name
+        mail.user=user
+        mail.password=password
+        mail.from=Administrator &lt;user@nosuchhost.com&gt;
+    &lt;/connection&gt;
+    &lt;connection id="db" .../&gt;
+    &lt;query connection-id="db" &gt;
+        SELECT * FROM Users
+        &lt;script connection-id="mail"&gt;
+            #$rownum
+            Message produced by Scriptella ETL
+        &lt;/script&gt;
+   &lt;/query&gt;
+&lt;/etl&gt;
+====================================================
+
+2.5. M$ Excel的使用
+^^^^^^^^^^^^^^^^^^^
+[[官方地址&lt;=http://scriptella.javaforge.com/docs/api/scriptella/driver/xls/package-summary.html]]
+
+把 Excel当Db使用，因为是JDBC驱动。
+
+================ xml: ETL文件片段 ==================
+&lt;connection id="xls" url="jdbc:xls:file:report.xls" classpath="sqlsheet-0.1.0.jar; poi-3.0.2-FINAL-20080204.jar; jsqlparser.jar" /&gt;
+
+&lt;script connection-id="xls"&gt;
+    CREATE TABLE SHEET1(
+                COL1 INT,
+                COL2 INT
+        );
+&lt;/script&gt;
+...
+&lt;query connection-id="db"&gt;
+    ...
+    &lt;script connection-id="xls"&gt;
+        INSERT INTO SHEET1 (COL1,COL2) VALUES(${rownum},${col2_value});
+    &lt;/script&gt;
+&lt;/query&gt;
+====================================================
+
+3. Scriptella 注意事项
+^^^^^^^^^^^^^^^^^^^^^^
+ * query标签，只能用来查询数据，UPDATE，INSERT，DELETE要用Script。
+ * if="priority == $priority"，query/script属性if里变量的使用。
+ * INSERT INTO $TABLE2 VALUES (?V1, ?{V2+V3}) 变量的使用方法和作用。
+ * 变量的作用域是自身和子标签，父标签的同名变量被隐藏。
+
+
+
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

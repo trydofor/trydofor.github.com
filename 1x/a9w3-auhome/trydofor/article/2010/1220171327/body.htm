@@ -1,0 +1,146 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+关系数据库及主键设计(讲稿)
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2010-12-20
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. RDBMS的应用特点
+^^^^^^^^^^^^^^^^^^
+  * 理论基础是关系代数。如JOIN。
+  * 模型有数据，关系和数据约束。
+  * 设计范式起码要满足1/2/3NF,BCNF。
+  * 事务特性符合ACID。
+  * 分布式领域的CAP理论的CP。
+  * OLTP和OLAP的不同应用。
+  * NoSQL作为RDBMS的补充。
+
+2. 设计范式
+^^^^^^^^^^^
+  * 1NF： 每列都是原子的。不多不重。
+  * 2NF： 非主键完全依赖于主键。
+  * 3NF： 非主键不传递依赖于主键。
+  * BCNF：主或非主键不传递依赖于主键。
+
+如果不满足范式的影响有：
+  * 数据冗余
+  * 插入、删除异常
+  * 修改复杂
+
+3. 事务特性
+^^^^^^^^^^^
+ACID（高一致，高可靠）
+  * 原子性（Atomicity）全成败，无残留。
+  * 一致性（Consistency）数据约束一致。
+  * 隔离性（Isolation）事务彼此不影响。
+  * 持久性（Durability）完成不可回退。
+
+CAP理论（分布式领域）
+  * Consistency(一致性), 数据变动都是同步的。
+  * Availability(可用性), 好的响应性能。
+  * Partition tolerance(分区容错性) 可靠性。
+
+BASE（基本可用，牺牲一致性）
+  * Basically Available 基本可用。
+  * Soft state软状态，可以不同步，异步。
+  * Eventually consistent最终一致，不是时时一致。
+
+4. OLTP和OLAP
+^^^^^^^^^^^^^
+==================== table:oltp-olap ====================
+项目       OLTP                       OLAP
+用户       操作人员，低层管理人员     决策人员，高级管理人员
+功能       日常操作处理               分析决策
+DB设计     面向应用                   面向主题
+数据       最新、细节、二维、分立的   历史、聚集、多维、集成的
+存取规模   读/写数（百）条记录        读上百万（亿）条记录
+操作频度   非常频繁（以秒计）         稀松（以小时，周计）
+工作单位   严格的事务                 复杂的查询
+用户数     数百个-数千万个            数个-数百个
+DB大小     100MB-GB                   100GB-TB
+=========================================================
+
+5. NoSQL的出现
+^^^^^^^^^^^^^^
+  * 理论基础：CAP和BASE
+  * 一族DB，定义模糊。Not Only SQL
+  * Wide Column Store / Column Families 
+  * Document Store 
+  * Key Value / Tuple Store 
+  * Graph Databases 
+  * Object Databases 
+  * Grid Database Solutions 
+  * XML Databases 
+
+6. RDBMS主键的特点
+^^^^^^^^^^^^^^^^^^
+  * 唯一的标识一行记录。
+    否则，操作数据困难。
+  * 作为外键来表达数据间关系。
+    否则，数据冗余或表述复杂。
+  * 主键具有唯一索引。
+  * 主键列不允许NULL
+  * B(-+*)TREE不NULL，BITMAP能NULL
+
+7. RDBMS主键的选择
+^^^^^^^^^^^^^^^^^^
+  * 是否该具有实在意义。
+    实在意义变更 vs. 可读性和冗余。
+  * 单主键与符合主键。
+    万不得已才用符合主键。
+  * 主键要易于索引。
+    数字优于字符串。
+  * 主键尽量短小，以免外键冗余。
+    1G数据时，每多1byte就多1G磁盘空间。
+
+8. RDBMS主键的策略
+^^^^^^^^^^^^^^^^^^
+  * 自增型
+    分段自增
+  * 业务号型
+    身份证号，邮件账号。
+  * X+1型
+    MAX(X)+1，IDFACTORY
+  * 散列型
+    SHA1，GUID/UUID
+
+9. RDBMS主键的推荐
+^^^^^^^^^^^^^^^^^^
+  * INTEGER (32bit=4byte)
+  * LONG/BIGINT (64bit=8byte)
+  * GUID/UUID (128bit=16byte)
+
+10. GUID/UUID
+^^^^^^^^^^^^^
+UUID (128bit=16byte) RFC 4122
+表示形式(8-4-4-4-12)
+    char(36)='682ecf75-5df2-102e-8548-9a095ebb92a8'
+    binary(16)=x'682ecf755df2102e85489a095ebb92a8‘
+DB中的格式
+    Oracle: RAW(16)
+    DB2/Derby: CHAR(16) FOR BIT DATA
+    HSQLDB/MySQL: BINARY(16)
+
+11. 自定义ID，A9ID
+^^^^^^^^^^^^^^^^^^
+A9ID 64bit = 8byte ,like long/bigint
+
+格式定义
+0xFFFF000000000000 instance 2^16=65535
+0x0000FFFFFFFFFFFF sequence 2^48=281474976710656
+
+可用性估算
+seconds/year=3600(s)*24(h)*365(d)=31536000
+requests/second=100000
+requests/year=31536*10^8
+need(0xFFFF)=89 year
+if instance == 0xFFF then need 1428 year
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>

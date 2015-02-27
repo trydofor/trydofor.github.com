@@ -1,6 +1,13 @@
 # Site navigation links
 
-- title:
-  url:
-  excerpt:
-  image:
+- title: ③拳两脚
+  url: /3x/
+  excerpt: ③拳两脚（3x），能动手的尽量别吵吵。
+
+- title: ②话不说
+  url: /2x/
+  excerpt: ②话不说（2x），很二很二的青葱岁月。
+
+- title: ①马当先
+  url: /1x/index.htm
+  excerpt: ①马当先（1x），在１１年１１月之前。

@@ -1,0 +1,182 @@
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<pre>
+限制用户目录的sftp和scp,ssh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ - 作者：臭豆腐[trydofor.com]
+ - 日期：2006-10-09
+ - 授权：署名-非商业-保持一致 1.0 协议
+ - 声明：拷贝、分发、呈现和表演本作品，请保留以上全部信息。
+
+0. 文档目录
+^^^^^^^^^^
+[[&lt;=$INDEX]]
+
+1. 试验目的
+^^^^^^^^^^^
+使openssh的S服务,能够限制用户在指定目录内活动，以屏蔽可能存在的安全隐患。
+
+但是Red Hat Enterprise Linux ES release 3的openssh是3.6.1，不支持pam验证,
+而且jailkit也不能在此环境下正常工作。
+
+2. 试验环境
+^^^^^^^^^^^
+192.168.0.1 和 192.168.0.2 是相同配置的机器，
+我们从192.168.0.1 rsh到 192.168.0.2，以保证ssh服务停止的时候
+我们仍然可以进行远程操作（rsh配置请参考以前的手册）
+
+=================== tty : root@trydofor ========================
+cat /etc/issue
+&gt;Red Hat Enterprise Linux ES release 3 (Taroon)
+
+rpm -qa |grep openssh
+&gt;openssh-server-3.6.1p2-18
+&gt;openssh-askpass-gnome-3.6.1p2-18
+&gt;openssh-clients-3.6.1p2-18
+&gt;openssh-askpass-3.6.1p2-18
+&gt;openssh-3.6.1p2-18
+================================================================
+
+3. 面临问题
+^^^^^^^^^^^
+1) 要远程升级 openssh 到 3.9以上，以支持pam认证
+2) 构造chroot环境
+
+4. 操作步骤
+^^^^^^^^^^^
+4.1. 远程升级openssh
+^^^^^^^^^^^^^^^^^^^^
+====================== tty: root@trydofor ======================
+# openssh-3.9p1.tar.gz到192.168.0.1
+rcp openssh-3.9p1.tar.gz root@192.168.0.2:/root/
+rsh 192.168.0.2 -l root
+
+#编译 openssh
+tar xvzf openssh-3.9p1.tar.gz
+cd openssh-3.9p1
+#--with-pam，是支持pam
+#--prefix=/usr --sysconfdir=/etc/ssh，是与原来的sshd保持一直
+./configure --with-pam --prefix=/usr --sysconfdir=/etc/ssh
+make
+
+#如果以上成功，停止sshd服务
+service sshd stop
+ps -ef |grep sshd
+
+#卸载 openssh-server 和 openssh
+rpm -qa|grep openssh
+&gt;openssh-askpass-gnome-3.6.1p2-18
+&gt;openssh-clients-3.6.1p2-18
+&gt;openssh-askpass-3.6.1p2-18
+&gt;openssh-server-3.6.1p2-18
+&gt;openssh-3.6.1p2-18
+
+rpm -e --nodeps openssh-server
+rpm -e --nodeps openssh
+#这里只卸载了openssh-server 和 openssh，因为我们只关心这两个服务，
+#对于其他的依赖关系尽量保持原有版本。（没时间搞清楚依赖关系，最好不动了）
+
+#安装刚刚编译的openssh
+make install
+
+#重建 /etc/rc.d/init.d/sshd
+cp contrib/redhat/sshd.init /etc/rc.d/init.d/sshd
+
+#重建 pam.d/sshd
+cat /etc/pam.d/sshd
+&gt;#%PAM-1.0
+&gt;auth       required     pam_stack.so service=system-auth
+&gt;auth       required     pam_nologin.so
+&gt;account    required     pam_stack.so service=system-auth
+&gt;password   required     pam_stack.so service=system-auth
+&gt;session    required     pam_stack.so service=system-auth
+
+#重启 sshd
+service sshd start
+================================================================
+
+4.2. 配置sshd以支持chroot
+^^^^^^^^^^^^^^^^^^^^^^^^^
+====================== tty: root@trydofor ======================
+#构建chroot环境
+#因为jailkit在当前版本的linux下不能正常运行，而且我们想搭建一个简洁的
+#chroot环境，这里使用了手动制作：）
+
+#使用环境变量，以方便干活
+export CHROOT_PATH=/home/chroot_env
+
+#创建基本目录
+mkdir -p $CHROOT_PATH/{bin,home,usr,lib}
+chown -r root.root $CHROOT_PATH
+cd $CHROOT_PATH
+
+#创建 /bin/bash环境
+cp /bin/bash $CHROOT_PATH/bin/bash
+for a in $(ldd /bin/bash | awk '{print $3}')
+do
+[ -e $CHROOT_PATH`dirname $a` ] || mkdir -p $CHROOT_PATH`dirname $a`
+cp -f $a $CHROOT_PATH$a;
+done
+
+#创建 sftp-server 环境
+export SFTP_SERVER=`grep sftp /etc/ssh/sshd_config | awk '{print $3}'`
+echo $SFTP_SERVER
+mkdir -p $CHROOT_PATH/`dirname $SFTP_SERVER`
+cp $SFTP_SERVER $CHROOT_PATH$SFTP_SERVER
+for a in $(ldd $SFTP_SERVER | awk '{print $3}')
+do
+[ -e $CHROOT_PATH`dirname $a` ] || mkdir -p $CHROOT_PATH`dirname $a`
+cp -f $a $CHROOT_PATH$a;
+done
+
+#chroot环境已经搭建完毕，只有一个bash可供使用
+#sftp-server，是为了相应用户的sftp登陆的
+
+
+#配置chroot-openssh
+#添加或指定享受此待遇的用户，这里是sftp_test
+#如果没有用户，指向chroot/home
+useradd -d /home/sftp_test sftp_test
+mv /home/sftp_test $CHROOT_PATH/home/sftp_test
+#这里使用了软连接，为了保持chroot环境和实际环境的一致。
+ln -s $CHROOT_PATH/sftp_test /home/sftp_test
+passwd sftp_test
+
+#修改sshd配置
+[vi /etc/ssh/sshd_config]
+UsePAM yes
+
+2.2.3 修改sshd.pam配置
+vi /etc/pam.d/sshd
+&gt;session    required     pam_chroot.so
+
+#修改chroot配置
+echo sftp_test   $CHROOT_PATH &gt;&gt; /etc/security/chroot.conf
+cat /etc/security/chroot.conf
+
+#重新启动
+service sshd restart
+
+#可选操作,增加安全性
+chattr -R +i $CHROOT_PATH
+chattr -R -i $CHROOT_PATH/home
+================================================================
+
+5. 经验总结
+^^^^^^^^^^^
+    1. 在升级openssh操作中，需要使用rsh登陆，以确保可以无论sshd如何，
+       都能够正常进行远程操作。
+        
+    2. jailkit是个好工具，可以实现限定用户的功能和更强大的功能，但是在
+       低版本的linux中不能正常工作，而且不如这样的简洁和方便
+        
+    3. 上面的环境很是简陋，在scp中，会找你要很多命令，如ls，group等
+       可以cp需要的命令到CHROOTENV中，并ldd，把相应的so也复制过去，
+
+6. 参考资料
+^^^^^^^^^^^
+    * [[openssh 官方主页=&gt;http://www.openssh.org]]
+    * [[google 'openssh pam'=&gt;http://www.google.cn/search?hl=zh-CN&amp;q=openssh+pam&amp;btnG=Google+%E6%90%9C%E7%B4%A2&amp;meta=]]
+    * [[jailkit  官方主页=&gt;http://olivier.sessink.nl/jailkit/]]
+</pre>
+<script type='text/javascript' src='../../../../../a9w3-engine/3rdp/a9text/a9loader.js'></script>
+<script type='text/javascript' src='../../../../../a9w3-engine/core/reader/item-a9text.js'></script>
