@@ -27,7 +27,7 @@ permalink: /archive/about.html
 |_____________________________________________|                     
 |                                             | CnName: Shi Rongjiu 
 |     ___|___     __|___|__       |____       |                     
-|    |   |   |    __|___|__      /    /       | EnName: Mahar.Shi   
+|    |   |   |    __|___|__      /    /       | EnName: Ajiu.Shi    
 |    |___|___|   |         |   _/    /        |                     
 |      __/         ---|---          /\        | Gender: ()-->       
 |       /\           /|\           /  \       |                     
@@ -35,8 +35,8 @@ permalink: /archive/about.html
 |      __         __             __           |          ___        
 |     /_ /_  -   /_/ _  _  _     / -          | Height: V 3  M      
 |    __// / /   / | /_// //_/  _/ / /_/       |                     
-|                         _/                  | Addrs : Dalian,Cn.  
-|_____________________________________________|                     
+|                         _/                  | Addrs : Dalian.Cn   
+|_____________________________________________|       : Hangzhou.Cn 
 |                                             |                     
 |   All RIGHTS RESERVED  TODAY & TOMORROW     | trydofor#somewhere  
 |_____________________________________________|                     
