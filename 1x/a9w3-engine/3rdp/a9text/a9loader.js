@@ -53,7 +53,7 @@ Object A9Loader.getPageArgs()
 
 var __A9Loader__ = function()
 {
-    var __selfConf__ = {name:"a9loader.js",extn:'.js',info:"__info__.js"};
+    var __selfConf__ = {name:"a9loader.js",extn:'.js',info:"info.js"};
     var __pageInfo__ = {core:"",path:"",name:"",info:"",args:{}};
     var __stdHandler__ = {stdout:null,stderr:null};
     var __asyncTextTask__ = {num:0,map:{}};

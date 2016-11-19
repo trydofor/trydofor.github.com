@@ -8,14 +8,17 @@ url: http://www.trydofor.com
 #url: http://local.trydofor.com:4000
 
 # Jekyll configuration
-
 sass:
     sass_dir: _sass
     style: compressed
 permalink: /:categories/:title.html
-markdown: redcarpet
-#markdown: kramdown
-highlighter: pygments
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input:          GFM
+  hard_wrap:      false
 
 gems:
   - jekyll-sitemap
