@@ -26,7 +26,6 @@
 	font-weight: 700;
 	@include font-size(19,no);
 	line-height: .5 * $masthead-height; // half the height to center vertically
-	text-transform: uppercase;
 }
 
 
