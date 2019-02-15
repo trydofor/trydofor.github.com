@@ -13,7 +13,7 @@ feature: lace/1200x600-dark.jpg
 {% assign lmtshow = 8 %}
 {% assign lmtstar = 4 %}
 {% assign tagstar = '$' %}
-{% assign catshow = '2x,3x' %}
+{% assign catshow = '2x,3x,4x' %}
 
 {% assign cntstar = site.tags[tagstar] | size %} 
 {% if cntstar > lmtstar %}{% assign cntstar = lmtstar %}{% endif %}
